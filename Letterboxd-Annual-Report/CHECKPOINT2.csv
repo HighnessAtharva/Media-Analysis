@@ -1,0 +1,219 @@
+Name,Year,Rating,Watched Date,Runtime,Genre,Director,Rated,Language,Country,imdbRating,imdbVotes,BoxOffice
+A Charlie Brown Christmas,1965.0,8,2022-01-01,25,"Animation, Comedy, Drama",Bill Melendez,TV-G,English,United States,8.3,"39,516",N/A
+Enter the Void,2009.0,7,2022-01-03,161,"Drama, Fantasy",Gaspar Noé,Not Rated,"English, Japanese","France, Germany, Italy, Canada, Japan",7.2,"81,210",336467
+Angel's Egg,1985.0,5,2022-01-04,71,"Animation, Drama, Fantasy, Horror, Mystery, Sci-Fi",Mamoru Oshii,N/A,Japanese,Japan,7.7,"7,817",N/A
+Elf,2003.0,5,2022-01-05,97,"Adventure, Comedy, Family",Jon Favreau,PG,English,United States,7.0,"269,130",177874109
+The Evil Dead,1981.0,6,2022-01-07,85,Horror,Sam Raimi,NC-17,English,United States,7.4,"211,647",2400000
+Bo Burnham: Inside,2021.0,8,2022-01-08,,,,,,,,,
+The Power of the Dog,2021.0,7,2022-01-08,126,"Drama, Romance, Western",Jane Campion,R,English,"New Zealand, United Kingdom, Canada, Australia",6.8,"174,125",N/A
+Fear(s) of the Dark,2007.0,5,2022-01-09,83,"Animation, Horror, Mystery","Blutch, Charles Burns, Marie Caillou",Unrated,French,France,6.6,"3,158",77876
+Evil Dead II,1987.0,4,2022-01-13,84,"Comedy, Horror",Sam Raimi,R,"English, Latin",United States,7.7,"166,552",5923044
+Shiva Baby,2020.0,8,2022-01-13,77,"Comedy, Drama",Emma Seligman,Not Rated,English,"Canada, United States",7.1,"22,420",159294
+"Salò, or the 120 Days of Sodom",1975.0,5,2022-01-17,117,Drama,Pier Paolo Pasolini,Not Rated,"Italian, French, German","Italy, France",5.8,"61,218",N/A
+The Tragedy of Macbeth,2021.0,6,2022-01-20,105,"Drama, Mystery, Thriller",Joel Coen,R,"English, Persian",United States,7.1,"34,337",N/A
+La Haine,1995.0,8,2022-01-21,98,"Crime, Drama",Mathieu Kassovitz,Not Rated,French,"France, United States",8.1,"175,542",280859
+Possession,1981.0,9,2022-01-21,124,"Drama, Horror",Andrzej Zulawski,R,"English, French, German","France, West Germany",7.3,"33,223",1158473
+The Wind Rises,2013.0,9,2022-01-30,126,"Animation, Biography, Drama",Hayao Miyazaki,PG-13,"Japanese, German, Italian, French, English","Japan, France, United States",7.7,"87,155",5209580
+My Neighbor Totoro,1988.0,9,2022-01-30,86,"Animation, Comedy, Family",Hayao Miyazaki,G,Japanese,Japan,8.1,"341,322",2250213
+Black Swan,2010.0,8,2022-01-30,108,"Drama, Thriller",Darren Aronofsky,R,"English, French, Italian",United States,8.0,"768,707",106954678
+Shame,2011.0,7,2022-01-30,101,Drama,Steve McQueen,NC-17,English,"United Kingdom, Canada, United States",7.2,"197,390",3909002
+Swiss Army Man,2016.0,1,2022-02-04,97,"Comedy, Drama, Fantasy","Dan Kwan, Daniel Scheinert",R,English,United States,6.9,"123,218",4210454
+Nightmare Alley,2021.0,8,2022-02-05,150,"Crime, Drama, Thriller",Guillermo del Toro,R,"English, French","United States, Mexico, Canada",7.0,"144,040",11338107
+Manchester by the Sea,2016.0,9,2022-02-06,137,Drama,Kenneth Lonergan,R,English,United States,7.8,"283,098",47695371
+Fantastic Mr. Fox,2009.0,10,2022-02-06,87,"Animation, Adventure, Comedy",Wes Anderson,PG,"English, French","United Kingdom, United States",7.9,"233,260",21002919
+Moebius,2013.0,4,2022-02-08,89,"Drama, Thriller",Kim Ki-duk,Unrated,,South Korea,6.4,"6,103",2340
+The Worst Person in the World,2021.0,7,2022-02-10,128,"Comedy, Drama, Romance",Joachim Trier,R,Norwegian,"Norway, France, Sweden, Denmark",7.8,"66,374",3034775
+There Will Be Blood,2007.0,6,2022-02-11,158,Drama,Paul Thomas Anderson,R,"English, American Sign ",United States,8.2,"586,624",40222514
+Sicario,2015.0,10,2022-02-11,121,"Action, Crime, Drama",Denis Villeneuve,R,"English, Spanish, Ukrainian","United States, Mexico, Hong Kong",7.6,"431,461",46889293
+C'mon C'mon,2021.0,6,2022-02-12,109,Drama,Mike Mills,R,"Persian, English",United States,7.4,"31,118",1863674
+Fargo,1996.0,3,2022-02-18,98,"Crime, Thriller","Joel Coen, Ethan Coen",R,English,"United States, United Kingdom",8.1,"679,965",24611975
+The French Dispatch,2021.0,8,2022-02-23,,,,,,,,,
+Aliens,1986.0,3,2022-02-23,137,"Action, Adventure, Sci-Fi",James Cameron,R,"English, Spanish","United Kingdom, United States",8.4,"719,280",85160248
+Black Candles,1982.0,6,2022-02-25,,,,,,,,,
+"Faster, Pussycat! Kill! Kill!",1965.0,7,2022-02-25,83,"Action, Comedy",Russ Meyer,Not Rated,English,United States,6.6,"15,256",N/A
+The Invitation,2015.0,8,2022-03-02,100,"Drama, Horror, Mystery",Karyn Kusama,Not Rated,English,United States,6.6,"110,425",231737
+Upgrade,2018.0,7,2022-03-02,100,"Action, Sci-Fi, Thriller",Leigh Whannell,R,"English, Dutch","United States, Australia",7.5,"187,768",11977130
+Titane,2021.0,5,2022-03-03,108,"Drama, Horror, Sci-Fi",Julia Ducournau,R,French,"France, Belgium",6.6,"46,595",1442988
+The Batman,2022.0,8,2022-03-04,176,"Action, Crime, Drama",Matt Reeves,PG-13,"English, Spanish, Latin, Italian",United States,7.8,"636,081",369345583
+Conan the Barbarian,1982.0,8,2022-03-06,129,"Action, Adventure, Fantasy",John Milius,R,English,"United States, Mexico",6.9,"151,165",39565475
+Conan the Destroyer,1984.0,6,2022-03-06,103,"Action, Adventure, Fantasy",Richard Fleischer,PG,English,"United States, Mexico",5.9,"81,080",31042035
+"Sherlock, Jr.",1924.0,6,2022-03-08,45,"Action, Comedy, Romance",Buster Keaton,Passed,"English, ",United States,8.2,"50,625",977375
+13 Going on 30,2004.0,6,2022-03-09,98,"Comedy, Fantasy, Romance",Gary Winick,PG-13,"English, Portuguese",United States,6.2,"195,160",57231747
+What We Do in the Shadows,2014.0,2,2022-03-09,86,"Comedy, Horror","Jemaine Clement, Taika Waititi",R,"English, German, Spanish, Latin",New Zealand,7.6,"185,239",3469224
+mother!,2017.0,6,2022-03-10,121,"Drama, Horror, Mystery",Darren Aronofsky,R,English,United States,6.6,"228,185",17800004
+Borat: Cultural Learnings of America for Make Benefit Glorious Nation of Kazakhstan,2006.0,8,2022-03-11,,,,,,,,,
+Tucker and Dale vs. Evil,2010.0,6,2022-03-11,89,"Comedy, Horror",Eli Craig,R,English,"Canada, United States",7.5,"182,357",223838
+Clueless,1995.0,7,2022-03-13,97,"Comedy, Romance",Amy Heckerling,PG-13,"English, Spanish",United States,6.9,"220,246",56631572
+EuroTrip,2004.0,7,2022-03-16,92,Comedy,"Jeff Schaffer, Alec Berg, David Mandel",R,"English, French, German, Italian, Japanese",United States,6.6,"210,869",17771387
+The Naked Gun: From the Files of Police Squad!,1988.0,7,2022-03-18,85,"Comedy, Crime",David Zucker,PG-13,English,United States,7.6,"171,886",78756177
+The Naked Gun 2½: The Smell of Fear,1991.0,7,2022-03-18,85,"Comedy, Crime",David Zucker,PG-13,"English, Spanish",United States,6.9,"114,661",86930411
+Kiki's Delivery Service,1989.0,8,2022-03-18,103,"Animation, Adventure, Family",Hayao Miyazaki,G,"Japanese, English",Japan,7.8,"146,447",1004057
+Naked Gun 33⅓: The Final Insult,1994.0,4,2022-03-18,,,,,,,,,
+George Carlin: It's Bad for Ya!,2008.0,9,2022-03-20,70,"Documentary, Comedy",Rocco Urbisci,TV-MA,English,United States,8.5,"6,160",N/A
+George Carlin: You Are All Diseased,1999.0,9,2022-03-20,65,"Documentary, Comedy",Rocco Urbisci,TV-MA,English,United States,8.5,"4,445",N/A
+You Were Never Really Here,2017.0,7,2022-03-27,89,"Crime, Drama",Lynne Ramsay,R,English,"United Kingdom, France, United States",6.7,"120,469",2528078
+George Carlin: Back in Town,1996.0,9,2022-03-29,60,"Documentary, Comedy",Rocco Urbisci,N/A,English,United States,8.6,"3,360",N/A
+Twin Peaks: Fire Walk with Me,1992.0,2,2022-04-09,134,"Drama, Horror, Mystery",David Lynch,R,English,"France, United States",7.2,"97,911",4160851
+X,2022.0,9,2022-04-15,105,"Horror, Mystery, Thriller",Ti West,R,English,"United States, Canada",6.6,"94,122",11765309
+It Follows,2014.0,7,2022-04-17,100,"Horror, Mystery, Thriller",David Robert Mitchell,R,English,United States,6.8,"244,302",14674076
+Raw,2016.0,5,2022-04-17,99,"Drama, Horror",Julia Ducournau,R,French,"France, Belgium, United States",7.0,"79,105",514870
+The House That Jack Built,2018.0,4,2022-04-17,152,"Crime, Drama, Horror",Lars von Trier,R,"English, German, Italian","Denmark, France, Sweden, Germany, Belgium, Tunisia",6.8,"78,177",258106
+Blue Velvet,1986.0,10,2022-04-21,120,"Crime, Drama, Mystery",David Lynch,R,English,United States,7.7,"201,258",8551228
+It's Such a Beautiful Day,2012.0,10,2022-04-22,62,"Animation, Comedy, Drama",Don Hertzfeldt,Not Rated,English,United States,8.2,"14,124",N/A
+After Hours,1985.0,9,2022-04-23,97,"Comedy, Crime, Drama",Martin Scorsese,R,English,United States,7.6,"70,583",10609321
+Eyes Wide Shut,1999.0,8,2022-04-23,159,"Drama, Mystery, Thriller",Stanley Kubrick,TV-MA,English,"United Kingdom, United States",7.5,"344,960",55691208
+Antiporno,2016.0,5,2022-04-23,76,Drama,Sion Sono,Not Rated,"Japanese, Spanish",Japan,6.4,"4,254",N/A
+Good Time,2017.0,8,2022-05-02,102,"Crime, Drama, Thriller","Benny Safdie, Josh Safdie",R,English,United States,7.3,"124,966",2026499
+A Silent Voice,2016.0,8,2022-05-04,130,"Animation, Drama",Naoko Yamada,Not Rated,"Japanese, Japanese Sign ",Japan,8.1,"82,348",764723
+Dragon Ball Z: Resurrection 'F',2015.0,6,2022-05-04,,,,,,,,,
+Dragon Ball Super: Broly,2018.0,6,2022-05-09,100,"Animation, Action, Adventure",Tatsuya Nagamine,PG,Japanese,Japan,7.7,"28,241",30712119
+Your Name.,2016.0,6,2022-05-10,106,"Animation, Drama, Fantasy",Makoto Shinkai,TV-PG,Japanese,Japan,8.4,"269,297",5017246
+Oldboy,2003.0,7,2022-05-11,120,"Action, Drama, Mystery",Park Chan-wook,R,Korean,South Korea,8.4,"580,827",707481
+The Handmaiden,2016.0,7,2022-05-12,145,"Drama, Romance, Thriller",Park Chan-wook,Not Rated,"Korean, Japanese",South Korea,8.1,"149,424",2006788
+Stoker,2013.0,6,2022-05-13,99,"Drama, Thriller",Park Chan-wook,R,"English, French, Italian","United Kingdom, United States",6.8,"109,917",1714221
+Fantastic Beasts: The Secrets of Dumbledore,2022.0,5,2022-05-13,142,"Adventure, Family, Fantasy",David Yates,PG-13,"English, German","United Kingdom, United States",6.2,"136,887",95850844
+The Northman,2022.0,10,2022-05-14,137,"Action, Adventure, Drama",Robert Eggers,R,"English, Norse, Old","United States, China",7.1,"198,495",34233110
+Popstar: Never Stop Never Stopping,2016.0,4,2022-05-16,87,"Comedy, Drama, Musical","Akiva Schaffer, Jorma Taccone",R,English,"United States, China",6.7,"63,026",9639125
+Horrible Bosses,2011.0,4,2022-05-18,98,"Comedy, Crime",Seth Gordon,R,English,United States,6.9,"451,525",117538559
+Everything Everywhere All at Once,2022.0,8,2022-05-21,139,"Action, Adventure, Comedy","Dan Kwan, Daniel Scheinert",R,"English, Mandarin, Cantonese",United States,8.1,"251,736",70008593
+The Thing,1982.0,6,2022-05-22,109,"Horror, Mystery, Sci-Fi",John Carpenter,R,"English, Norwegian","United States, Canada",8.2,"425,959",19629760
+Project X,2012.0,2,2022-05-22,88,Comedy,Nima Nourizadeh,R,English,United States,6.6,"212,150",54731865
+House,1977.0,9,2022-05-22,88,"Comedy, Horror",Nobuhiko Ôbayashi,Not Rated,Japanese,Japan,7.3,"28,916",209765
+Licorice Pizza,2021.0,8,2022-05-23,133,"Comedy, Drama, Romance",Paul Thomas Anderson,R,"English, Japanese, Spanish","United States, Canada",7.2,"115,738",17318007
+Juno,2007.0,6,2022-05-23,96,"Comedy, Drama",Jason Reitman,PG-13,"English, Spanish",United States,7.5,"523,890",143495265
+Persona,1966.0,3,2022-05-23,83,"Drama, Thriller",Ingmar Bergman,Not Rated,"Swedish, English",Sweden,8.1,"119,561",N/A
+Gerald's Game,2017.0,6,2022-05-24,103,"Drama, Horror, Thriller",Mike Flanagan,TV-MA,English,United States,6.5,"112,042",N/A
+Vampire Hunter D,1985.0,8,2022-05-25,80,"Animation, Action, Fantasy",Toyoo Ashida,Not Rated,Japanese,Japan,7.1,"16,100",N/A
+Vampire Hunter D: Bloodlust,2000.0,9,2022-05-25,103,"Animation, Action, Drama","Jack Fletcher, Yoshiaki Kawajiri",R,"Japanese, English","Japan, Hong Kong, United States",7.6,"32,654",151086
+Another Round,2020.0,3,2022-05-25,117,"Comedy, Drama",Thomas Vinterberg,Not Rated,"Danish, Swedish","Denmark, Sweden, Netherlands",7.7,"161,373",N/A
+Vertigo,1958.0,9,2022-05-25,128,"Mystery, Romance, Thriller",Alfred Hitchcock,PG,English,United States,8.3,"403,530",7705225
+Basic Instinct,1992.0,8,2022-05-26,127,"Drama, Mystery, Thriller",Paul Verhoeven,R,English,"United States, France",7.0,"202,502",117727224
+Mad Max: Fury Road,2015.0,10,2022-05-27,120,"Action, Adventure, Sci-Fi",George Miller,R,"English, Russian",Australia,8.1,"1,003,637",154109060
+The 40 Year Old Virgin,2005.0,6,2022-06-09,116,"Comedy, Romance",Judd Apatow,R,"English, Spanish, Japanese",United States,7.1,"440,022",109449237
+Lux Æterna,2019.0,4,2022-06-10,51,"Drama, Thriller",Gaspar Noé,N/A,"French, English, Danish",France,6.3,"5,762",50027
+Cha Cha Real Smooth,2022.0,8,2022-06-17,107,"Comedy, Drama",Cooper Raiff,R,English,United States,7.3,"18,676",N/A
+Scarface,1983.0,10,2022-06-19,170,"Crime, Drama",Brian De Palma,R,"English, Spanish",United States,8.3,"841,332",45408703
+Pink Flamingos,1972.0,8,2022-06-20,93,"Comedy, Crime",John Waters,NC-17,English,United States,6.0,"25,462",N/A
+Cage The Elephant - Unpeeled,,10,2022-06-20,,,,,,,,,
+Mad God,2021.0,9,2022-06-20,83,"Animation, Fantasy, Horror",Phil Tippett,N/A,,United States,6.8,"8,455",322619
+Doctor Strange in the Multiverse of Madness,2022.0,6,2022-06-22,126,"Action, Adventure, Fantasy",Sam Raimi,PG-13,"English, Spanish, Chinese",United States,6.9,"411,731",411331607
+[REC],2007.0,9,2022-06-24,78,"Horror, Mystery, Thriller","Jaume Balagueró, Paco Plaza",R,"Spanish, Japanese",Spain,7.4,"182,508",N/A
+The Descent,2005.0,7,2022-06-24,99,"Adventure, Horror, Thriller",Neil Marshall,R,English,United Kingdom,7.2,"227,663",26024456
+Chungking Express,1994.0,7,2022-06-25,102,"Comedy, Crime, Drama",Kar-Wai Wong,PG-13,"Cantonese, English, Japanese, Hindi, Mandarin, Punjabi, Urdu",Hong Kong,8.0,"83,432",600200
+Fallen Angels,1995.0,7,2022-06-25,99,"Comedy, Crime, Drama",Kar-Wai Wong,Not Rated,"Min Nan, Japanese, English, Cantonese, Mandarin",Hong Kong,7.6,"40,990",163145
+In the Mood for Love,2000.0,7,2022-06-26,98,"Drama, Romance",Kar-Wai Wong,PG,"Cantonese, Shanghainese, French, Spanish","Hong Kong, France",8.1,"150,785",2738980
+Dogville,2003.0,6,2022-06-27,178,"Crime, Drama",Lars von Trier,R,English,"Denmark, Netherlands, Sweden, Germany, United Kingdom, France, Finland, Norway, Italy",8.0,"150,200",1535286
+Men,2022.0,6,2022-06-27,100,"Drama, Fantasy, Horror",Alex Garland,R,English,United Kingdom,6.1,"39,513",7587853
+The Grand Budapest Hotel,2014.0,8,2022-06-28,99,"Adventure, Comedy, Crime",Wes Anderson,R,"English, French, German","United States, Germany",8.1,"807,383",59301324
+Audition,1999.0,6,2022-06-29,115,"Drama, Horror, Mystery",Takashi Miike,R,Japanese,"Japan, South Korea",7.1,"82,277",131296
+Bringing Out the Dead,1999.0,5,2022-07-01,121,"Drama, Thriller",Martin Scorsese,R,English,United States,6.8,"70,955",16797191
+Moulin Rouge!,2001.0,6,2022-07-03,127,"Drama, Musical, Romance",Baz Luhrmann,PG-13,"English, French, Spanish","Australia, United States",7.6,"286,283",57386607
+How to Train Your Dragon,2010.0,8,2022-07-04,98,"Animation, Action, Adventure","Dean DeBlois, Chris Sanders",PG,English,United States,8.1,"739,031",217581231
+How to Train Your Dragon 2,2014.0,7,2022-07-04,102,"Animation, Action, Adventure",Dean DeBlois,PG,English,United States,7.8,"337,558",177002924
+How to Train Your Dragon: The Hidden World,2019.0,8,2022-07-04,104,"Animation, Action, Adventure",Dean DeBlois,PG,English,"United States, Japan",7.4,"130,916",160945505
+Dave Chappelle: What's in a Name?,2022.0,5,2022-07-11,,,,,,,,,
+The Virgin Suicides,1999.0,7,2022-07-11,97,"Drama, Romance",Sofia Coppola,R,English,United States,7.2,"156,471",4906229
+Belladonna of Sadness,1973.0,8,2022-07-12,86,"Animation, Drama, Fantasy",Eiichi Yamamoto,Unrated,Japanese,Japan,7.3,"6,425",105841
+Little Miss Sunshine,2006.0,7,2022-07-15,101,"Comedy, Drama","Jonathan Dayton, Valerie Faris",R,English,United States,7.8,"482,597",59891098
+Mandy,2018.0,7,2022-07-22,121,"Action, Fantasy, Horror",Panos Cosmatos,Not Rated,English,"United Kingdom, Belgium, United States",6.5,"80,605",1233694
+Scooby-Doo,2002.0,7,2022-07-22,86,"Adventure, Comedy, Family",Raja Gosnell,PG,English,"United States, Australia",5.2,"114,926",153322074
+Clue,1985.0,8,2022-07-23,94,"Comedy, Crime, Mystery",Jonathan Lynn,PG,"English, French",United States,7.2,"98,346",14643997
+Ponyo,2008.0,9,2022-07-23,101,"Animation, Adventure, Comedy",Hayao Miyazaki,G,"Japanese, English",Japan,7.6,"144,974",15743471
+Castle in the Sky,1986.0,4,2022-07-24,125,"Animation, Adventure, Family",Hayao Miyazaki,PG,Japanese,Japan,8.0,"167,433",523664
+Heathers,1988.0,7,2022-07-24,103,"Comedy, Crime",Michael Lehmann,R,English,United States,7.2,"105,756",1108462
+The Nice Guys,2016.0,9,2022-07-24,116,"Action, Comedy, Crime",Shane Black,R,"English, German",United States,7.3,"330,324",36261763
+Dazed and Confused,1993.0,6,2022-07-28,103,Comedy,Richard Linklater,R,English,United States,7.6,"185,710",7993039
+Pleasure,2021.0,6,2022-07-28,109,Drama,Ninja Thyberg,R,"English, Swedish","Sweden, Netherlands, France",6.3,"16,825",106789
+Rosemary's Baby,1968.0,7,2022-07-30,137,"Drama, Horror",Roman Polanski,Approved,English,United States,8.0,"218,822",N/A
+Boogie Nights,1997.0,8,2022-07-31,155,Drama,Paul Thomas Anderson,R,English,United States,7.9,"267,564",26416349
+Malignant,2021.0,5,2022-07-31,111,"Crime, Horror, Mystery",James Wan,R,English,"United States, China",6.2,"92,101",13391791
+Serial Mom,1994.0,7,2022-08-01,95,"Comedy, Crime, Thriller",John Waters,R,English,United States,6.8,"30,365",7820688
+Minions: The Rise of Gru,2022.0,7,2022-08-04,87,"Animation, Adventure, Comedy","Kyle Balda, Brad Ableson, Jonathan del Val",PG,"English, Vietnamese",United States,6.6,"63,585",368618620
+The Slumber Party Massacre,1982.0,6,2022-08-05,77,Horror,Amy Holden Jones,R,English,United States,5.6,"15,578",N/A
+Corpse Bride,2005.0,8,2022-08-06,77,"Animation, Drama, Family","Tim Burton, Mike Johnson",PG,English,"United States, United Kingdom",7.3,"277,102",53401527
+BlacKkKlansman,2018.0,8,2022-08-07,135,"Biography, Comedy, Crime",Spike Lee,R,English,"United States, China",7.5,"266,114",49275340
+Valhalla Rising,2009.0,6,2022-08-07,93,"Action, Adventure, Drama",Nicolas Winding Refn,Not Rated,English,"Denmark, United Kingdom",6.0,"61,084",30638
+Cry-Baby,1990.0,7,2022-08-08,85,"Comedy, Musical",John Waters,PG-13,English,United States,6.5,"61,266",8266343
+Polyester,1981.0,7,2022-08-08,86,Comedy,John Waters,R,English,N/A,7.0,"8,353",N/A
+Prey,2022.0,8,2022-08-08,100,"Action, Adventure, Drama",Dan Trachtenberg,R,"English, North American Indian, French",United States,7.2,"188,533",N/A
+Sinister,2012.0,5,2022-08-09,110,"Horror, Mystery, Thriller",Scott Derrickson,R,English,"United States, United Kingdom, Canada",6.8,"255,843",48086903
+TTRRUUCES - The Movie,,9,2022-08-09,,,,,,,,,
+Punch-Drunk Love,2002.0,5,2022-08-10,95,"Comedy, Drama, Romance",Paul Thomas Anderson,R,English,United States,7.3,"166,273",17844216
+Lost Highway,1997.0,7,2022-08-11,134,"Mystery, Thriller",David Lynch,R,English,"France, United States",7.6,"143,960",3726792
+Jurassic World Dominion,2022.0,2,2022-08-12,147,"Action, Adventure, Sci-Fi",Colin Trevorrow,PG-13,English,"United States, China, Malta",5.7,"152,561",374817385
+Harold & Kumar Go to White Castle,2004.0,9,2022-08-13,88,"Adventure, Comedy",Danny Leiner,R,"English, Hindi","United States, Canada, Germany",7.0,"197,490",18250550
+Harold & Kumar Escape from Guantanamo Bay,2008.0,7,2022-08-14,114,"Adventure, Comedy","Jon Hurwitz, Hayden Schlossberg",R,"English, Spanish, French",United States,6.5,"138,060",38108728
+A Very Harold & Kumar Christmas,2011.0,5,2022-08-14,90,"Adventure, Comedy",Todd Strauss-Schulson,R,"English, Spanish",United States,6.2,"70,544",35061031
+"Dude, Where's My Car?",2000.0,8,2022-08-14,83,"Comedy, Mystery, Sci-Fi",Danny Leiner,PG-13,"English, Japanese, French",United States,5.5,"140,928",46729800
+Road Trip,2000.0,5,2022-08-20,93,Comedy,Todd Phillips,R,English,United States,6.5,"170,873",68540777
+The Black Phone,2021.0,3,2022-08-20,103,"Horror, Thriller",Scott Derrickson,R,English,United States,6.9,"135,865",89887230
+Cecil B. Demented,2000.0,7,2022-08-24,87,"Comedy, Crime, Thriller",John Waters,R,English,"United States, France",6.2,"15,961",1284646
+Nope,2022.0,8,2022-08-25,130,"Horror, Mystery, Sci-Fi",Jordan Peele,R,"English, Spanish","United States, Japan, Canada",6.9,"171,698",123277080
+The Decameron,1971.0,7,2022-08-27,111,"Comedy, Drama, History",Pier Paolo Pasolini,R,"Italian, Neapolitan, German, Latin","Italy, France, West Germany",7.1,"11,178",N/A
+I Saw the Devil,2010.0,6,2022-09-02,144,"Action, Crime, Drama",Jee-woon Kim,Not Rated,Korean,South Korea,7.8,"132,151",129210
+Heat,1995.0,10,2022-09-04,170,"Action, Crime, Drama",Michael Mann,R,"English, Spanish",United States,8.3,"656,413",67436818
+10 Cloverfield Lane,2016.0,6,2022-09-04,103,"Drama, Horror, Mystery",Dan Trachtenberg,PG-13,English,United States,7.2,"330,726",72082998
+Phantom Thread,2017.0,6,2022-09-04,130,"Drama, Romance",Paul Thomas Anderson,R,"English, French","United States, United Kingdom, China",7.4,"134,367",21198205
+Dogtooth,2009.0,6,2022-09-04,97,"Drama, Thriller",Yorgos Lanthimos,Not Rated,Greek,Greece,7.2,"97,490",110248
+Catch Me If You Can,2002.0,6,2022-09-04,141,"Biography, Crime, Drama",Steven Spielberg,PG-13,"English, French","United States, Canada",8.1,"978,719",164615351
+Thor: Love and Thunder,2022.0,5,2022-09-08,118,"Action, Adventure, Comedy",Taika Waititi,PG-13,English,"Australia, United States",6.4,"317,371",343256830
+Marcel the Shell with Shoes On,2021.0,4,2022-09-15,90,"Animation, Comedy, Drama",Dean Fleischer-Camp,PG,English,United States,7.9,"7,403",6333702
+Jujutsu Kaisen 0,2021.0,9,2022-09-21,112,"Animation, Action, Fantasy",Seong-Hu Park,PG-13,Japanese,Japan,7.8,"19,077",34542754
+Bodies Bodies Bodies,2022.0,8,2022-09-23,94,"Comedy, Horror, Thriller",Halina Reijn,R,English,United States,6.3,"33,091",11446602
+Mortal Kombat Legends: Snow Blind,2022.0,5,2022-09-29,82,"Animation, Action, Adventure",Rick Morales,R,English,N/A,6.6,"1,645",N/A
+Blonde,2022.0,7,2022-10-02,167,"Biography, Drama, Romance",Andrew Dominik,NC-17,"English, Italian",N/A,5.5,"51,445",N/A
+Ninja Scroll,1993.0,8,2022-10-04,94,"Animation, Action, Adventure",Yoshiaki Kawajiri,Not Rated,Japanese,Japan,7.8,"38,039",N/A
+We're All Going to the World's Fair,2021.0,3,2022-10-05,86,"Drama, Horror",Jane Schoenbrun,N/A,English,United States,5.3,"3,342",101178
+Hellraiser,2022.0,6,2022-10-07,121,"Horror, Mystery, Thriller",David Bruckner,R,English,"United States, Serbia",6.0,"33,786",N/A
+Werewolf by Night,2022.0,8,2022-10-07,52,"Action, Adventure, Drama",Michael Giacchino,TV-14,English,United States,7.2,"54,054",N/A
+Trick 'r Treat,2007.0,7,2022-10-12,82,"Comedy, Horror",Michael Dougherty,R,English,United States,6.7,"95,437",N/A
+Fast Times at Ridgemont High,1982.0,7,2022-10-12,90,"Comedy, Drama",Amy Heckerling,R,English,United States,7.1,"106,665",27092880
+Come and See,1985.0,8,2022-10-14,142,"Drama, Thriller, War",Elem Klimov,Not Rated,"Russian, Belarusian, German",Soviet Union,8.4,"80,955",71909
+Lake Mungo,2008.0,3,2022-10-14,87,"Drama, Horror, Mystery",Joel Anderson,R,English,Australia,6.3,"23,815",N/A
+The Wolf House,2018.0,7,2022-10-14,75,"Animation, Drama, Horror","Joaquín Cociña, Cristóbal León",Not Rated,"Spanish, German","Chile, Germany",7.5,"3,264",N/A
+Pearl,2022.0,8,2022-10-21,103,Horror,Ti West,R,"English, German","United States, Canada",7.0,"30,728",8932152
+The Princess Bride,1987.0,9,2022-10-23,98,"Adventure, Family, Fantasy",Rob Reiner,PG,English,United States,8.0,"428,966",30857814
+Don't Worry Darling,2022.0,6,2022-10-24,123,"Drama, Thriller",Olivia Wilde,R,English,United States,6.2,"77,695",45202636
+Barbarian,2022.0,9,2022-10-25,102,"Horror, Mystery, Thriller",Zach Cregger,R,English,United States,7.1,"93,521",40726705
+Black Adam,2022.0,7,2022-10-26,125,"Action, Adventure, Fantasy",Jaume Collet-Serra,PG-13,English,United States,6.6,"173,360",N/A
+Decision to Leave,2022.0,4,2022-10-28,139,"Crime, Drama, Mystery",Park Chan-wook,N/A,"Korean, Chinese",South Korea,7.3,"19,677",N/A
+Videodrome,1983.0,8,2022-10-29,87,"Horror, Sci-Fi, Thriller",David Cronenberg,R,"English, Spanish, Japanese, French, Italian",Canada,7.2,"95,068",2120439
+Trainspotting,1996.0,10,2022-11-03,93,Drama,Danny Boyle,R,English,United Kingdom,8.1,"689,260",16491080
+Martyrs,2008.0,8,2022-11-04,99,Horror,Pascal Laugier,R,"English, French","France, Canada",7.0,"96,389",N/A
+The Texas Chain Saw Massacre,1974.0,8,2022-11-05,83,Horror,Tobe Hooper,R,English,United States,7.4,"165,343",30859000
+Enola Holmes 2,2022.0,7,2022-11-06,129,"Action, Adventure, Crime",Harry Bradbeer,PG-13,English,"United Kingdom, United States",6.8,"60,904",N/A
+Jackass: The Movie,2002.0,6,2022-11-07,85,"Documentary, Action, Comedy",Jeff Tremaine,R,English,United States,6.6,"96,105",64255312
+Jackass Number Two,2006.0,7,2022-11-07,92,"Documentary, Action, Comedy",Jeff Tremaine,R,English,United States,7.0,"76,571",72778712
+Jackass 3D,2010.0,6,2022-11-13,94,"Documentary, Action, Comedy",Jeff Tremaine,R,English,United States,7.0,"65,958",117229692
+Jackass Forever,2022.0,7,2022-11-15,96,"Documentary, Action, Comedy",Jeff Tremaine,R,English,United States,6.9,"44,195",57743451
+TÁR,2022.0,9,2022-11-17,158,"Biography, Drama, Music",Todd Field,R,"English, German, Filipino, French",United States,7.7,"14,216",1467823
+Barbarella,1968.0,7,2022-11-17,98,"Adventure, Comedy, Fantasy",Roger Vadim,PG,"English, French","France, Italy",5.8,"35,423",N/A
+Funny Games,1997.0,4,2022-11-17,108,"Crime, Drama, Thriller",Michael Haneke,Not Rated,"German, French, Italian",Austria,7.5,"76,432",N/A
+Crimes of the Future,2022.0,4,2022-11-17,107,"Drama, Horror, Sci-Fi",David Cronenberg,R,English,"Canada, Greece, United Kingdom",5.9,"28,179",2452882
+Weird: The Al Yankovic Story,2022.0,6,2022-11-18,108,"Biography, Comedy, Music",Eric Appel,TV-14,English,United States,7.1,"18,467",N/A
+Terrifier,2016.0,6,2022-11-18,85,"Horror, Thriller",Damien Leone,Unrated,English,United States,5.6,"35,122",N/A
+Terrifier 2,2022.0,5,2022-11-20,138,Horror,Damien Leone,Not Rated,English,United States,6.3,"22,609",1208900
+"Elvira, Mistress of the Dark",1988.0,5,2022-11-20,96,"Comedy, Horror",James Signorelli,PG-13,English,United States,6.5,"18,803",5596267
+Black Panther: Wakanda Forever,2022.0,7,2022-11-21,161,"Action, Adventure, Drama",Ryan Coogler,PG-13,"English, Spanish",United States,7.3,"103,643",N/A
+The Hot Spot,1990.0,9,2022-11-22,130,"Crime, Drama, Romance",Dennis Hopper,R,English,United States,6.4,"12,296",1293976
+Crash,1996.0,5,2022-11-22,100,Drama,David Cronenberg,NC-17,"English, Swedish","Canada, United Kingdom",6.4,"61,490",2664812
+Triangle of Sadness,2022.0,10,2022-11-25,147,"Comedy, Drama",Ruben Östlund,R,"Akan, English, Swedish, German, French, Greek, Tagalog","Sweden, France, United Kingdom, Germany, Turkey, Greece",7.6,"35,959",320475
+The Guardians of the Galaxy Holiday Special,2022.0,6,2022-11-28,41,"Action, Adventure, Comedy",James Gunn,TV-14,English,United States,6.9,"54,812",N/A
+Dallas Buyers Club,2013.0,7,2022-12-03,117,"Biography, Drama",Jean-Marc Vallée,R,"English, Japanese",United States,7.9,"490,270",27298285
+Unbreakable,2000.0,7,2022-12-04,106,"Drama, Mystery, Sci-Fi",M. Night Shyamalan,PG-13,English,United States,7.3,"419,912",95011339
+Top Gun,1986.0,6,2022-12-07,110,"Action, Drama",Tony Scott,PG,English,United States,6.9,"438,983",180258178
+Top Gun: Maverick,2022.0,8,2022-12-07,130,"Action, Drama",Joseph Kosinski,PG-13,English,United States,8.4,"467,836",716498761
+Split,2016.0,6,2022-12-07,117,"Horror, Thriller",M. Night Shyamalan,PG-13,English,"United States, Japan",7.3,"499,836",138291365
+Glass,2019.0,6,2022-12-07,129,"Drama, Horror, Sci-Fi",M. Night Shyamalan,PG-13,"English, Spanish","United States, China",6.6,"244,282",111048468
+Napoleon Dynamite,2004.0,10,2022-12-08,96,Comedy,Jared Hess,PG,English,United States,6.9,"222,228",44540956
+Braveheart,1995.0,8,2022-12-08,178,"Biography, Drama, History",Mel Gibson,R,"English, French, Latin, Gaelic, Italian",United States,8.4,"1,038,773",75609945
+Prometheus,2012.0,6,2022-12-09,124,"Adventure, Mystery, Sci-Fi",Ridley Scott,R,"English, Gaelic","United Kingdom, United States",7.0,"610,947",126477084
+Guillermo del Toro's Pinocchio,2022.0,8,2022-12-09,117,"Animation, Drama, Family","Guillermo del Toro, Mark Gustafson",PG,English,"United States, Mexico, France",7.8,"25,208",N/A
+Closer,2004.0,6,2022-12-10,104,"Drama, Romance",Mike Nichols,R,English,"United States, United Kingdom",7.2,"221,725",33987757
+Battle Royale,2000.0,6,2022-12-10,114,"Action, Adventure, Drama",Kinji Fukasaku,Not Rated,"English, Japanese",Japan,7.6,"184,250",N/A
+Dragon Ball Super: Super Hero,2022.0,7,2022-12-14,100,"Animation, Action, Adventure",Tetsuro Kodama,PG-13,"English, Japanese",Japan,7.1,"9,452",30859433
+Aftersun,2022.0,7,2022-12-15,102,Drama,Charlotte Wells,R,English,"United Kingdom, United States",7.7,"8,529",N/A
+Bones and All,2022.0,6,2022-12-16,131,"Drama, Horror, Romance",Luca Guadagnino,R,English,"Italy, United States",7.0,"22,741",N/A
+The Banshees of Inisherin,2022.0,8,2022-12-17,114,"Comedy, Drama",Martin McDonagh,R,English,"Ireland, United Kingdom, United States",8.0,"35,094",N/A
+Amsterdam,2022.0,6,2022-12-17,134,"Comedy, Drama, History",David O. Russell,R,"English, French","Japan, United States",6.1,"42,474",14160601
+Glass Onion: A Knives Out Mystery,2022.0,9,2022-12-24,140,"Comedy, Crime, Drama",Rian Johnson,PG-13,English,United States,7.7,"32,814",N/A
