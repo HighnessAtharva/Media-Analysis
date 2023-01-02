@@ -322,11 +322,18 @@ def longest_watch_streak(movie_df):
     print(tabulate(tabular_data=[['Longest Watch Streak', f'{jump_days} days', start, end]], headers = ['#', 'Days', 'Start', 'End'], tablefmt = 'fancy_grid', showindex=False))
     pretty_printer()
 
-    
+def most_watched_month(movie_df):
+    pass
+
+def least_watched_month(movie_df):
+    pass
+
+
 
 YEAR = 2022
 movies = pd.read_csv('diary.csv', encoding='utf-8',
                      header=0, usecols=['Name', 'Year', 'Watched Date', 'Rating'])
+# filter movies by year 
 movie_df = movies[movies['Watched Date'].str.contains(str(YEAR))]
 
 
@@ -344,8 +351,6 @@ if os.path.isfile('CHECKPOINT2.csv'):
 else:
     cleanup_dataframe(movie_df)
     
-# base dataframe
-movie_df = pd.read_csv('CHECKPOINT2.csv', encoding='utf-8')
 
 total_movies_watched(movie_df)
 total_time_watched(movie_df)
