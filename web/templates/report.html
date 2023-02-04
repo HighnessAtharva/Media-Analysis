@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goodreads Stats</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/report.css') }}">
+    
+</head>
+<body>
+    <h1 class="text-center">Goodreads Report</h1>
+   
+
+    <div class="flex-center">
+        <div class="circle">
+          <h2>Total Books Read</h2>
+          <p>{{ total_books}}</p>
+        </div>
+      
+        <div class="circle">
+          <h2>Average Rating</h2>
+          <p>{{ average_rating}}</p>
+        </div>
+        
+        
+        <div class="circle">
+          <h2>Total pages Read</h2>
+          <p>{{ total_pages_read}}K</p>
+        </div>
+
+        <div class="circle">
+          <h2>Average Pages Per Book</h2>
+          <p>{{ average_page_per_book}}</p>
+        </div>
+        
+      </div>
+
+
+      <div class="flex-center">
+        <div class="circle">
+          <h2>Shortest Book</h2>
+          <p class="small-text">{{ shortest_book }}</p>
+          <p class="small-text">{{ shortest_book_pages }} pages</p>
+        </div>
+
+        <div class="circle">
+          <h2>Longest Book</h2>
+          <p class="small-text">{{ longest_book }}</p>
+          <p class="small-text">{{ longest_book_pages}} pages</p> 
+        </div>
+
+        <div class="circle">
+          <h2>Oldest Book</h2>
+          <p class="small-text">{{ oldest_book}}</p>
+          <p class="small-text">Published: {{ oldest_book_year}}</p>
+        </div>
+
+      </div> 
+        
+
+
+    <h3 class="text-center table-heading">Top 10 Authors</h3> 
+    {% for table in top_authors %} {{ table|safe }} {% endfor %} 
+    
+    <h3 class="text-center table-heading">Top 10 Rated Books in (Sorted by My Rating first and then by Average Rating)</h3> 
+    {% for table in top_books %} {{ table|safe }} {% endfor %} 
+    
+    <h3 class="text-center table-heading">Top 10 Publishers</h3> 
+    {% for table in top_publishers %} {{ table|safe }} {% endfor %}
+
+    <h3 class="text-center table-heading">Top 10 Binding</h3>
+    {% for table in top_binding %} {{ table|safe }} {% endfor %}
+
+    <h3 class="text-center table-heading">Books Read Per Year</h3>
+    {% for table in books_read_per_year %} {{ table|safe }} {% endfor %}
+
+    <h3 class="text-center table-heading">Tag Distribution</h3>
+    {% for table in tag_distribution %} {{ table|safe }} {% endfor %}
+
+</body>
+</html>

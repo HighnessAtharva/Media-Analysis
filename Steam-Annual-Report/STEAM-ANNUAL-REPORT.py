@@ -1,3 +1,5 @@
+# ALL DATA OBTAINED FROM - https://www.lorenzostanco.com/lab/steam/
+
 import urllib
 import requests
 import pandas as pd
@@ -60,6 +62,7 @@ def cleanup_dataframe(games_df: pd.DataFrame):
 
     for index, row in games_df.iterrows():
         to_add = [column for column in my_platforms if row[column] == 'x']
+        # fill - where platforms is NA
         if not to_add:
             to_add.append('-')
         games_df.at[index, 'platforms'] = ', '.join(to_add)
@@ -80,14 +83,11 @@ def cleanup_dataframe(games_df: pd.DataFrame):
     # fill 0 where hours is NA
     games_df['hours'] = games_df['hours'].fillna(0)
     
-    # fill "NA" where metascore is NA
+    # fill "-" where metascore is NA
     games_df['metascore'] = games_df['metascore'].fillna('-')
     
-    # # fill "NA" where Userscore is NA
+    # # fill "-" where Userscore is NA
     games_df['userscore'] = games_df['userscore'].fillna('-')
-    
-    # fill "NA" where platforms is NA
-    games_df['platforms'] = games_df['platforms'].fillna('-')
     
     print(games_df)
     # print(games_df.loc[1])
