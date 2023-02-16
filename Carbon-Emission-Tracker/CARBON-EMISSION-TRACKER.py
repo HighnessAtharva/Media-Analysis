@@ -16,17 +16,17 @@ try:
 
     emission_dict = {}
 
-    with open('Emissions.csv', 'r') as file:
-        for data in file.read().split('\n'):
-            emission_dict.update({data.split(',')[0]: data.split(',')[1:]})
+    with open("Emissions.csv", "r") as file:
+        for data in file.read().split("\n"):
+            emission_dict.update({data.split(",")[0]: data.split(",")[1:]})
 
-    print("All data from Emissions.csv has been read into a dictionary.", end='\n\n')
+    print("All data from Emissions.csv has been read into a dictionary.", end="\n\n")
     """
   Step 1: Take the input from user
   """
 
-    '''TODO: input_year = input('Enter the year for which you'd like to see the data: ')'''
-    input_year = '2001'
+    """TODO: input_year = input('Enter the year for which you'd like to see the data: ')"""
+    input_year = "2001"
 
     index_of = None
     lines = []
@@ -36,7 +36,7 @@ try:
     # Loop through First VALUE of Dictionary and if year present in list then set index of VALUE as index_of
     for item in emission_dict.values():
         if input_year in item:
-            index_of = (item.index(input_year))
+            index_of = item.index(input_year)
 
     total = 0
     i = 0
@@ -60,10 +60,16 @@ try:
     # Let's try to understand this from inner Single Line loop. We converted String to float and created list, from this
     # list we found the maximum and minimum float value, converted that into string and got the index of maximum and
     # minimum emission country.
-    max_country_index = int(emissions_in_year.index(
-        str(max(float(str_value) for str_value in emissions_in_year))))
-    min_country_index = int(emissions_in_year.index(
-        str(min(float(str_value) for str_value in emissions_in_year))))
+    max_country_index = int(
+        emissions_in_year.index(
+            str(max(float(str_value) for str_value in emissions_in_year))
+        )
+    )
+    min_country_index = int(
+        emissions_in_year.index(
+            str(min(float(str_value) for str_value in emissions_in_year))
+        )
+    )
     average_emissions = total / len(emission_dict.values())
 
     # Using index value we got the Name of maximum and minimum country name
@@ -73,19 +79,22 @@ try:
     """
   Step 5: Printing the data in required format using formatted string
   """
-    print(f'In {input_year}, countries with minimum and maximum CO2 emission levels were: [{min_emission}] '
-          f'and [{max_emission}] respectively.')
     print(
-        f'Average CO2 emissions in {input_year} were {"%.6f" % round(average_emissions, 6)}')
+        f"In {input_year}, countries with minimum and maximum CO2 emission levels were: [{min_emission}] "
+        f"and [{max_emission}] respectively."
+    )
+    print(
+        f'Average CO2 emissions in {input_year} were {"%.6f" % round(average_emissions, 6)}'
+    )
     print()
 
     """
   Step 6: Take the input from user to visualize data
   """
-    ''' TODO: visualize_country = input('Enter the country for which you'd like to visualize the data)
+    """ TODO: visualize_country = input('Enter the country for which you'd like to visualize the data)
         TODO: Exception Handling
-    '''
-    visualize_country = 'Qatar'
+    """
+    visualize_country = "Qatar"
 
     """
   Step 7: Getting the index of Country and passing it to plot function, Setting the Title and Label of Plot
@@ -94,8 +103,10 @@ try:
     # From user entered value we extracted the Index value of country
     number = list(emission_dict.keys()).index(visualize_country)
     # Passed that index value to matplotlib plot function. As x value we passed years and as y value we passed emission value
-    plt.plot(list(map(float, list(emission_dict.values())[0])),
-             list(map(float, list(emission_dict.values())[number])))
+    plt.plot(
+        list(map(float, list(emission_dict.values())[0])),
+        list(map(float, list(emission_dict.values())[number])),
+    )
     # Given the Title and Lable to Plot
     plt.title("Year vs Emissions in Capita")
     plt.xlabel("Year")
@@ -106,8 +117,8 @@ try:
     """
   Step 8: Take two comma-separated countries input from user
   """
-    '''TODO:country1, country2 = input("Write two comma-separated countries for which you want to visualize data: ").split(", ")'''
-    country1, country2 = 'India', 'Qatar'
+    """TODO:country1, country2 = input("Write two comma-separated countries for which you want to visualize data: ").split(", ")"""
+    country1, country2 = "India", "Qatar"
     """
   Step 9: Extracting the Index number for both countries
   """
@@ -120,10 +131,16 @@ try:
   """
 
     # In this task we combined two plots in one and given the label to identify.
-    plt.plot(list(map(float, list(emission_dict.values())[0])),
-             list(map(float, list(emission_dict.values())[index_num_1])), label=country1)
-    plt.plot(list(map(float, list(emission_dict.values())[0])),
-             list(map(float, list(emission_dict.values())[index_num_2])), label=country2)
+    plt.plot(
+        list(map(float, list(emission_dict.values())[0])),
+        list(map(float, list(emission_dict.values())[index_num_1])),
+        label=country1,
+    )
+    plt.plot(
+        list(map(float, list(emission_dict.values())[0])),
+        list(map(float, list(emission_dict.values())[index_num_2])),
+        label=country2,
+    )
     plt.title("Year vs Emissions in Capita")
     plt.xlabel("Year")
     plt.ylabel("Emissions")
@@ -155,7 +172,7 @@ try:
                 + "\n"
             )
         # Open CSV in write mode and writing lines to CSV
-        with open('Emissions_subset.csv', 'w') as new_file:
+        with open("Emissions_subset.csv", "w") as new_file:
             new_file.writelines(write_line_csv)
             # Printing the value in required format
         print(
@@ -174,9 +191,8 @@ try:
   """
 
     while True:
-        '''TODO: input_string = input("Write up to three comma-separated countries for which you want to extract data: ")
-        '''
-        input_string = 'India, Oman, Qatar'
+        """TODO: input_string = input("Write up to three comma-separated countries for which you want to extract data: ")"""
+        input_string = "India, Oman, Qatar"
         input_country = input_string.split(", ")
         # Calling the Function to validate input
         if not extract_data(input_country):
