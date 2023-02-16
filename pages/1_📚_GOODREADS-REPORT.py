@@ -342,7 +342,50 @@ st.set_page_config(
 # TITLE
 st.title(":blue[Goodreads] Reading Analysis :book:")
 
+st.markdown(
+    """
+        
 
+    Are you a bookworm who loves using Goodreads to keep track of your reading progress and discover new books to read? If so, then you're in luck! Introducing the Goodreads Analysis Report tool, the ultimate solution for getting the most out of your Goodreads data. 🤓
+
+    ### How it Works
+
+    With the Goodreads Analysis Report, you simply upload your export CSV file from your Goodreads account and let the tool do the rest! Our tool uses advanced data analysis techniques to generate statistical reports and provide you with in-depth insights that are not available on the Goodreads platform. 📈
+
+    ### Features
+
+    - Analyze Your Reading Data: Our tool provides detailed statistics on the books you've read, including the number of books you've read, the average rating, and the number of pages read.
+
+    - Discover Your Reading Habits: The Goodreads Analysis Report helps you understand your reading habits by providing information on the genres, authors, and publication years of the books you've read.
+
+    - Interactive Dashboards: The tool provides interactive dashboards that allow you to filter your data and explore your reading patterns visually. 
+
+    - Personalized Recommendations: Based on your reading history, the tool provides personalized recommendations for books that you might enjoy, making it easy to discover your next favorite read. 📚
+
+    ### How to Get Started
+
+    To get started with the Goodreads Analysis Report, simply export your Goodreads data as a CSV file and upload it to our tool. From there, our tool will analyze your data and provide you with a comprehensive report on your reading habits. 
+
+    So what are you waiting for? Try out the Goodreads Analysis Report today and start getting the most out of your reading data! 🚀
+
+    """
+)
+
+st.write("---")
+st.info("Don't have a Goodreads account? Create one [here](https://www.goodreads.com/user/sign_up)")
+st.info("Don't have a Goodreads export file? Get an example one below 👇🏻")
+
+with open("pages/goodreads_export.csv", "rb") as goodreads_example:
+    btn = st.download_button(
+            label="Download Goodreads Export Example",
+            data=goodreads_example,
+            file_name="goodreads_export.csv",
+            mime="text/csv",
+            help="This is an example Goodreads export file. You can use this to test out the app.",
+          )
+    
+st.write("---")
+    
 # FILE UPLOAD WIDGET
 uploaded_file = st.file_uploader(
     label="Choose a Goodreads Export CSV File",
@@ -350,6 +393,8 @@ uploaded_file = st.file_uploader(
     help="Goodreads Account -> Settings -> Export",
     accept_multiple_files=False,
 )
+
+
 
 
 if uploaded_file is not None:
