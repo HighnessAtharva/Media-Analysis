@@ -3,6 +3,7 @@ import os
 import streamlit as st
 import numpy as np
 from functools import wraps
+from datetime import datetime
 
 
 def add_seperator(func):
@@ -15,16 +16,12 @@ def add_seperator(func):
     return wrapper
 
 
-@st.cache_data
 def cleanup_dataframe(books_df: pd.DataFrame):
     # check for null values and drop them
     books_df = books_df.dropna(how="all", axis=0)
 
     # split the title on the first occurence of ( and take the first part
     books_df["Title"] = books_df["Title"].str.split("(", n=1, expand=True)[0]
-
-    # drop the year column since we don't need it anymore
-    books_df = books_df.drop(["Year"], axis=1)
 
     # filter out rows where exclusive shelf value == read
     books_df = books_df[books_df["Exclusive Shelf"] == "read"]
@@ -45,6 +42,7 @@ def cleanup_dataframe(books_df: pd.DataFrame):
 @add_seperator
 @st.cache_data
 def general_stats(books_df: pd.DataFrame):
+    st.markdown("---")
     col1, col2, col3 = st.columns(3)
 
     # total number of books read
@@ -62,20 +60,23 @@ def general_stats(books_df: pd.DataFrame):
         st.header("Total :red[Authors] Read")
         st.markdown(f"## {len(books_df['Author'].unique())}")
 
+    col1, col2, col3 = st.columns(3)
+
 
 @add_seperator
 @st.cache_data
 def total_books_by_year(books_df: pd.DataFrame):
-    st.header("Total Books Read by Year")
-
-    # add a new column to the dataframe that contains the year of the book
-    books_df["Year"] = books_df["Date Read"].str.split("-", n=1, expand=True)[0]
+    st.header("Total Books Read by Year 🗓️")
 
     # count the number of books read by each year
     books_by_year = books_df["Year"].value_counts()
-    books_by_year = books_by_year.sort_index()
 
-    st.area_chart(books_by_year)
+    # skip the rows where year value is missing
+    books_by_year = books_by_year[books_by_year.index != ""]
+
+    # sort by year
+    books_by_year = books_by_year.sort_index().astype(int)
+    st.bar_chart(books_by_year)
 
 
 # TODO: display the bar graph from highest to lowest
@@ -89,8 +90,8 @@ def top_N_authors(books_df: pd.DataFrame, num_authors: int, genre: str, year: in
             "Author"
         ].value_counts()  # count the number of books read by each author
         author_count = author_count[author_count > 1]
-        if author_count.empty:
-            st.error("Not enough authors to display")
+        if author_count.empty or len(author_count) < num_authors:
+            st.error("Not enough authors to in your library")
         else:
             st.bar_chart(author_count.head(num_authors))
 
@@ -101,8 +102,8 @@ def top_N_authors(books_df: pd.DataFrame, num_authors: int, genre: str, year: in
             "Author"
         ].value_counts()  # count the number of books read by each author
         author_count = author_count[author_count > 1]
-        if author_count.empty:
-            st.error("Not enough authors to display")
+        if author_count.empty or len(author_count) < num_authors:
+            st.error("Not enough authors to display for the given genre")
         else:
             st.bar_chart(author_count.head(num_authors))
 
@@ -113,8 +114,8 @@ def top_N_authors(books_df: pd.DataFrame, num_authors: int, genre: str, year: in
             "Author"
         ].value_counts()  # count the number of books read by each author
         author_count = author_count[author_count > 1]
-        if author_count.empty:
-            st.error("Not enough authors to display")
+        if author_count.empty or len(author_count) < num_authors:
+            st.error("Not enough authors to display for the given year")
         else:
             st.bar_chart(author_count.head(num_authors))
 
@@ -125,176 +126,210 @@ def top_N_authors(books_df: pd.DataFrame, num_authors: int, genre: str, year: in
             (books_df["Year"] == year) & (books_df["Bookshelves"] == genre)
         ]["Author"].value_counts()
         author_count = author_count[author_count > 1]
-        if author_count.empty:
-            st.error("Not enough authors to display")
+        if author_count.empty or len(author_count) < num_authors:
+            st.error("Not enough authors to display for the given year and genre")
         else:
             st.bar_chart(author_count.head(num_authors))
 
 
-
 @add_seperator
 def top_N_rated_books(books_df: pd.DataFrame, N: int):
-    books_df = books_df[books_df['My Rating'] > 0]
+    books_df = books_df[books_df["My Rating"] > 0]
     # store only the columns we are interested in
-    books_df = books_df[['Title', 'Author', 'My Rating', 'Average Rating']]
+    books_df = books_df[["Title", "Author", "My Rating", "Average Rating"]]
 
     # sort the dataframe by My Rating and Average Rating
-    books_df = books_df.sort_values(
-        by=['My Rating', 'Average Rating'], ascending=False)
-    
+    books_df = books_df.sort_values(by=["My Rating", "Average Rating"], ascending=False)
+
     # replace the index column with the book title
-    books_df = books_df.set_index('Title')
-    
+    books_df = books_df.set_index("Title")
+
     # display the top N books
     st.markdown(f"### Top {N} Rated Books")
     st.dataframe(books_df.head(N), use_container_width=True)
 
 
-# def top_N_publishers(books_df: pd.DataFrame, N: int = 10):
-#     print(f"Top {N} Publishers in {YEAR}")
-#     # count the number of books read by each author should be greater than 1
-#     publisher_count = books_df['Publisher'].value_counts()
-#     publisher_count = publisher_count[publisher_count > 1]
-#     if N > len(publisher_count):
-#         print(
-#             f"WARNING: N is greater than the number of publishers in the dataframe. Setting N to {len(publisher_count)}")
-#     print(tabulate(tabular_data=publisher_count.head(N).to_frame(),
-#           headers=['Publisher', 'Books Read'], tablefmt='fancy_grid'))
-#
+@add_seperator
+def bottom_N_rated_books(books_df: pd.DataFrame, N: int):
+    books_df = books_df[books_df["My Rating"] > 0]
+    # store only the columns we are interested in
+    books_df = books_df[["Title", "Author", "My Rating", "Average Rating"]]
+
+    # sort the dataframe by My Rating and Average Rating
+    books_df = books_df.sort_values(by=["My Rating", "Average Rating"], ascending=True)
+
+    # replace the index column with the book title
+    books_df = books_df.set_index("Title")
+
+    # display the top N books
+    st.markdown(f"### Bottom {N} Rated Books")
+    st.dataframe(books_df.head(N), use_container_width=True)
 
 
-# def average_rating(books_df: pd.DataFrame):
-#     print(f"Average Rating of Books Read in {YEAR}")
-#     # count the number of books read by each author should be greater than 1
-#     avg_rating = books_df['My Rating'].mean()
-#     print(tabulate(tabular_data=[[avg_rating]], headers=[
-#           'Average Rating'], tablefmt='fancy_grid'))
-#
+@st.cache_data
+@add_seperator
+def total_pages_per_year(books_df: pd.DataFrame):
+    st.markdown("### Total Pages Read per Year")
+    # drop all nans
+    books_df = books_df[books_df["Year"] != ""]
+    books_df = books_df.dropna()
+    books_df["Year"] = books_df["Year"].astype(int)
+
+    # sum the number of pages read per year
+    books_df = books_df.groupby("Year").sum().astype(int)
+    books_df = books_df["Number of Pages"]
+    st.line_chart(books_df, y="Number of Pages")
 
 
-# def top_N_binding(books_df: pd.DataFrame, N: int = 10):
-#     print(f"Top {N} Binding Types in {YEAR}")
-#     # count the number of books read by each author should be greater than 1
-#     binding_count = books_df['Binding'].value_counts()
-#     binding_count = binding_count[binding_count > 1]
-#     if N > len(binding_count):
-#         print(
-#             f"WARNING: N is greater than the number of bindings in the dataframe. Setting N to {len(binding_count)}")
-#     print(tabulate(tabular_data=binding_count.head(N).to_frame(),
-#           headers=['Binding', 'Books Read'], tablefmt='fancy_grid'))
-#
+@st.cache_data
+@add_seperator
+def average_rating_per_year(books_df: pd.DataFrame):
+    # do a time series plot of average rating per year
+    st.markdown("### Average Rating per Year")
+    books_df = books_df[books_df["Year"] != ""]
+    # drop all nans
+    books_df = books_df.dropna()
+    books_df["Year"] = books_df["Year"].astype(int)
+    books_df = books_df.groupby("Year").mean()
+    books_df = books_df["Average Rating"]
+    st.line_chart(books_df, y="Average Rating")
 
 
-# def total_pages_read(books_df: pd.DataFrame):
-#     print(f"Total Pages Read in {YEAR}")
-#     # count the number of books read by each author should be greater than 1
-#     total_pages = books_df['Number of Pages'].sum()
-#     print(tabulate(tabular_data=[[total_pages]], headers=[
-#           'Total Pages'], tablefmt='fancy_grid'))
-#
+@st.cache_data
+@add_seperator
+def pages_read_per_month(books_df: pd.DataFrame, year: int):
+    st.markdown(f"### Pages Read per Month in {year}")
+    # filter the dataframe by year
+    books_df = books_df[books_df["Year"] == year]
+
+    # keep only the columns we are interested in
+    books_df = books_df[["Number of Pages", "Date Read"]]
+
+    # drop all rows where Number of Pages is NaN
+    books_df = books_df.dropna()
+
+    # add a new column for month
+    books_df["Month"] = books_df["Date Read"].apply(lambda x: x.split("-")[1])
+
+    # remove the Date Read column
+    books_df = books_df.drop("Date Read", axis=1)
+
+    # group by month and sum the number of pages read
+    books_df = books_df.groupby("Month").sum()
+
+    # rename month column values to month names
+    books_df = books_df.rename(
+        index={
+            "01": "January",
+            "02": "February",
+            "03": "March",
+            "04": "April",
+            "05": "May",
+            "06": "June",
+            "07": "July",
+            "08": "August",
+            "09": "September",
+            "10": "October",
+            "11": "November",
+            "12": "December",
+        }
+    )
+
+    st.bar_chart(books_df, y="Number of Pages")
 
 
-# def average_pages_read(books_df: pd.DataFrame):
-#     print(f"Average Pages Read in {YEAR}")
-#     # count the number of books read by each author should be greater than 1
-#     avg_pages = books_df['Number of Pages'].mean()
-#     print(tabulate(tabular_data=[[avg_pages]], headers=[
-#           'Average Pages'], tablefmt='fancy_grid'))
-#
+@st.cache_data
+@add_seperator
+def general_stats_2(books_df: pd.DataFrame):
+    col1, col2, col3 = st.columns(3, gap="large")
+
+    with col1:
+        st.header(":blue[Oldest] Book Read")
+        books_df1 = books_df[["Title", "Original Publication Year"]]
+        books_df1 = books_df.sort_values(
+            by=["Original Publication Year"], ascending=True, ignore_index=True
+        )  # sort the dataframe by My Rating and Average Rating
+        oldest = books_df1["Title"][0]
+        oldest_pub_year = books_df1["Original Publication Year"][0].astype(int)
+        st.markdown(f"### {oldest}")
+        st.markdown(f"Published ***{oldest_pub_year}***")
+
+    with col2:
+        st.header(":green[Newest] Book Read")
+        books_df2 = books_df[["Title", "Original Publication Year"]]
+        # sort reverse by Original Publication Year
+        books_df2 = books_df.sort_values(
+            by=["Original Publication Year"], ascending=False, ignore_index=True
+        )  # sort the dataframe by My Rating and Average Rating
+        newest = books_df2["Title"][0]
+        newest_pub_year = books_df2["Original Publication Year"][0].astype(int)
+        st.markdown(f"### {newest}")
+        st.markdown(f"Published ***{newest_pub_year}***")
+
+    with col3:
+        st.header(":red[First] Book Read")
+        books_df3 = books_df[["Title", "Author", "Date Read"]]
+        books_df3 = books_df3.sort_values(
+            by=["Date Read"], ascending=True, ignore_index=True
+        )  # sort the dataframe by My Rating and Average Rating
+        first = books_df3.loc[0, "Title"]
+        date_of_first = books_df3["Date Read"][0]
+
+        # convert date_of_first to human readable format
+        date_of_first = datetime.strptime(date_of_first, "%Y-%m-%d").strftime(
+            "%B %d, %Y"
+        )
+
+        st.markdown(f"### {first}")
+        st.markdown(f"Read on ***{date_of_first}***")
+
+    col1, col2, col3 = st.columns(3, gap="large")
+
+    with col1:
+        # last book read
+
+        st.header(":violet[Last] Book Read")
+        books_df4 = books_df[["Title", "Author", "Date Read"]]
+        books_df4 = books_df4.sort_values(
+            by=["Date Read"], ascending=False, ignore_index=True
+        )  # sort the dataframe by My Rating and Average Rating
+        last = books_df4.loc[0, "Title"]
+        date_of_last = books_df4["Date Read"][0]
+
+        # convert date_of_last to human readable format
+        date_of_last = datetime.strptime(date_of_last, "%Y-%m-%d").strftime("%B %d, %Y")
+
+        st.markdown(f"### {last}")
+        st.markdown(f"Read on ***{date_of_last}***")
+
+    with col2:
+        # longest book read
+        st.header(":orange[Longest] Book Read")
+        books_df5 = books_df[["Title", "Author", "Number of Pages"]]
+        books_df5 = books_df5.sort_values(
+            by=["Number of Pages"], ascending=False, ignore_index=True
+        )  # sort the dataframe by My Rating and Average Rating
+        longest = books_df5.loc[0, "Title"]
+        longest_pages = books_df5["Number of Pages"][0].astype(int)
+        st.markdown(f"### {longest}")
+        st.markdown(f"***{longest_pages}*** pages")
+
+    with col3:
+        # shortest book read
+        st.header(":violet[Shortest] Book Read")
+        books_df6 = books_df[["Title", "Author", "Number of Pages"]]
+        books_df6 = books_df6.sort_values(
+            by=["Number of Pages"], ascending=True, ignore_index=True
+        )
+        shortest = books_df6.loc[0, "Title"]
+        shortest_pages = books_df6["Number of Pages"][0].astype(int)
+        st.markdown(f"### {shortest}")
+        st.markdown(f"***{shortest_pages}*** pages")
 
 
-# def shortest_and_longest_books(books_df: pd.DataFrame):
-#     # store only the columns we are interested in
-#     books_df = books_df[['Title', 'Author', 'Number of Pages']]
-
-#     print(f"Shortest and Longest Books Read in {YEAR}")
-#     # sort the dataframe by My Rating and Average Rating
-#     books_df = books_df.sort_values(
-#         by=['Number of Pages'], ascending=True, ignore_index=True)
-
-#     smallest = books_df.loc[0]
-#     largest = books_df.loc[len(books_df)-1]
-
-#     print(tabulate(tabular_data=[smallest, largest],
-#           headers='keys', tablefmt='fancy_grid'))
-#
-
-
-# def oldest_book_read(books_df: pd.DataFrame):
-#     # store only the columns we are interested in
-#     books_df = books_df[['Title', 'Author', 'Original Publication Year']]
-
-#     print(f"Oldest Book Read in {YEAR}")
-#     # sort the dataframe by My Rating and Average Rating
-#     books_df = books_df.sort_values(
-#         by=['Original Publication Year'], ascending=True, ignore_index=True)
-
-#     oldest = books_df.loc[0]
-
-#     print(tabulate(tabular_data=[oldest],
-#           headers='keys', tablefmt='fancy_grid'))
-#
-
-
-# def first_and_last_books_read(books_df: pd.DataFrame):
-#     # store only the columns we are interested in
-#     books_df = books_df[['Title', 'Author', 'Date Read']]
-
-#     print(f"First and Last Books Read in {YEAR}")
-#     # sort the dataframe by My Rating and Average Rating
-#     books_df = books_df.sort_values(
-#         by=['Date Read'], ascending=True, ignore_index=True)
-
-#     first = books_df.loc[0]
-#     last = books_df.loc[len(books_df)-1]
-
-#     print(tabulate(tabular_data=[first, last],
-#           headers='keys', tablefmt='fancy_grid'))
-#
-
-
-# def books_read_per_month(books_df: pd.DataFrame):
-#     # store only the columns we are interested in
-
-#     books_df = books_df.loc[:, ['Title', 'Author', 'Date Read']]
-
-#     print(f"Books Read Per Month in {YEAR}")
-#     # sort the dataframe by My Rating and Average Rating
-#     books_df['Date Read'] = pd.to_datetime(books_df['Date Read'])
-#     books_df['Month'] = books_df['Date Read'].dt.month
-
-#     # get the number of books read per month and include zero values for months that have no books read
-#     books_per_month = books_df['Month'].value_counts().reindex(
-#         range(1, 13), fill_value=0)
-
-#     # change Month column to be the month name
-#     books_per_month.index = books_per_month.index.map({1: 'January', 2: 'February', 3: 'March', 4: 'April',
-#                                                       5: 'May', 6: 'June', 7: 'July', 8: 'August', 9: 'September', 10: 'October', 11: 'November', 12: 'December'})
-
-#     print(tabulate(tabular_data=books_per_month.to_frame(),
-#           headers=['Month', 'Books Read'], tablefmt='fancy_grid'))
-
-#
-
-
-# def tag_distribution(books_df: pd.DataFrame):
-#     # get only bookshelves column
-#     books_df = books_df.loc[:, ['Bookshelves']]
-
-#     # group by the bookshelves column count
-#     books_df = books_df.groupby(
-#         'Bookshelves').size().reset_index(name='counts')
-
-#     # sort by counts
-#     books_df = books_df.sort_values(
-#         by=['counts'], ascending=False, ignore_index=False)
-
-#     print(f"Tag Distribution in {YEAR}")
-
-#     print(tabulate(tabular_data=books_df, headers='keys',
-#                    tablefmt='fancy_grid', showindex=False))
-#
-
+####################
+## MAIN FUNCTION  ##
+####################
 
 # CONFIG
 st.set_page_config(
@@ -306,6 +341,7 @@ st.set_page_config(
 
 # TITLE
 st.title(":blue[Goodreads] Reading Analysis :book:")
+
 
 # FILE UPLOAD WIDGET
 uploaded_file = st.file_uploader(
@@ -361,11 +397,35 @@ if uploaded_file is not None:
         # GENERAL STATS
         general_stats(books_df)
 
+        best, worst = st.columns(2, gap="large")
+
+        # FAVORITE N BOOKS BY RATING
+        with best:
+            st.header(":green[Favorite] Books by Rating ⭐")
+            book_count = len(books_df["Title"].unique())
+            book_count = min(book_count, 25)
+            book_count = range(10, book_count + 1, 5)
+            num_books = st.selectbox(
+                label="Limit By", options=book_count, index=0, key="fav"
+            )
+            top_N_rated_books(books_df, num_books)
+
+        # LEAST FAVORITE N BOOKS BY RATING
+        with worst:
+            st.header(":red[Worst] Books by Rating 💩")
+            book_count = len(books_df["Title"].unique())
+            book_count = min(book_count, 25)
+            book_count = range(10, book_count + 1, 5)
+            num_books = st.selectbox(
+                label="Limit By", options=book_count, index=0, key="least"
+            )
+            bottom_N_rated_books(books_df, num_books)
+
         # BOOKS READ PER YEAR
         total_books_by_year(books_df)
 
         # AUTHOR STATS
-        st.header("Most Read Authors")
+        st.header("Most Read Authors 👨🏻‍🏫")
         col1, col2, col3 = st.columns(3)
 
         with col1:
@@ -394,77 +454,72 @@ if uploaded_file is not None:
             ]  # show a dropdown by year of reading
             years = books_df["Year"].unique()
             years = years[~pd.isnull(years)]  # drop all rows with NaN values
+
+            # sort the numpy years in descending order
+            years = np.sort(years)[::-1]
+
             years = np.insert(years, 0, "All")  # add a 'All' as first option
-            year = st.selectbox(label="Filter by Year", options=years, index=0)
+            year = st.selectbox(
+                label="Filter by Year", options=years, index=0, key="totalbooksbyyear"
+            )
 
         top_N_authors(books_df, num_authors, genre, year)
-        
-        # TOP N BOOKS
-        st.header("Top Books by Rating")
-        book_count = len(books_df["Title"].unique())
-        book_count = min(book_count, 25)
-        book_count = range(10, book_count + 1, 5)
-        num_books = st.selectbox(label="Limit By", options=book_count, index=0)
-        top_N_rated_books(books_df, num_books)
-        
-        # total_books_read(books_df)
-        # top_N_authors(books_df)
-        # top_N_rated_books(books_df)
-        # top_N_publishers(books_df)
-        # average_rating(books_df)
-        # top_N_binding(books_df)
-        # total_pages_read(books_df)
-        # average_pages_read(books_df)
-        # shortest_and_longest_books(books_df)
-        # oldest_book_read(books_df)
-        # first_and_last_books_read(books_df)
-        # books_read_per_month(books_df)
-        # tag_distribution(books_df)
+
+        # PER YEAR STATS
+        col1, col2 = st.columns(2, gap="large")
+        with col1:
+            st.header("Total Pages Read Per Year 📖")
+            total_pages_per_year(books_df)
+
+        with col2:
+            st.header("Average Rating Per Year ⌚")
+            average_rating_per_year(books_df)
+
+        # MONTH WISE STATS
+        st.header("Month-Wise Reading Trend 📚")
+        # remove "All" from years
+        years = years[1:]
+
+        year = st.selectbox(
+            label="Select Year", options=years, index=0, key="monthwisereadingtrend"
+        )
+        pages_read_per_month(books_df, year)
+
+        general_stats_2(books_df)
 
     else:
         st.error("Invalid CSV File. Please upload a valid Goodreads CSV File.")
 
 
-# #######################
-# # DATA ANALYSIS START #
-# #######################
+
+# def top_N_publishers(books_df: pd.DataFrame, N: int = 10):
+#     print(f"Top {N} Publishers in {YEAR}")
+#     # count the number of books read by each author should be greater than 1
+#     publisher_count = books_df['Publisher'].value_counts()
+#     publisher_count = publisher_count[publisher_count > 1]
+#     if N > len(publisher_count):
+#         print(
+#             f"WARNING: N is greater than the number of publishers in the dataframe. Setting N to {len(publisher_count)}")
+#     print(tabulate(tabular_data=publisher_count.head(N).to_frame(),
+#           headers=['Publisher', 'Books Read'], tablefmt='fancy_grid'))
+#
 
 
-# def :
-#     print("""
-#           ----------------8<-------------[ Annual Book Report ]------------------
-#           """)
+#
+
+# def top_N_binding(books_df: pd.DataFrame, N: int = 10):
+#     print(f"Top {N} Binding Types in {YEAR}")
+#     # count the number of books read by each author should be greater than 1
+#     binding_count = books_df['Binding'].value_counts()
+#     binding_count = binding_count[binding_count > 1]
+#     if N > len(binding_count):
+#         print(
+#             f"WARNING: N is greater than the number of bindings in the dataframe. Setting N to {len(binding_count)}")
+#     print(tabulate(tabular_data=binding_count.head(N).to_frame(),
+#           headers=['Binding', 'Books Read'], tablefmt='fancy_grid'))
+#
 
 
-# YEAR = 2022
-# books_df = pd.read_csv('goodreads_export.csv', encoding='utf-8',
-#                        header=0, usecols=['Title', 'Author', 'My Rating', 'Average Rating', 'Publisher', 'Binding', 'Number of Pages', 'Original Publication Year', 'Date Read', 'Bookshelves', 'Exclusive Shelf'])
-
-# # get the year from the the Date Read column
-# books_df['Date Read'] = pd.to_datetime(books_df['Date Read'])
-# books_df['Year'] = books_df['Date Read'].dt.year
-
-# # filter the dataframe to only include the year we are interested in
-# books_df = books_df[books_df['Year'] == YEAR]
-
-# # check if CHECKPOINT1.csv exists
-# if os.path.exists('CHECKPOINT1.csv'):
-#     print("CHECKPOINT1.csv exists. Reading from file...")
-#     books_df = pd.read_csv('CHECKPOINT1.csv', encoding='utf-8', header=0)
-# else:
-#     cleanup_dataframe(books_df)
 
 
-# total_books_read(books_df)
-# top_N_authors(books_df)
-# top_N_rated_books(books_df)
-# top_N_publishers(books_df)
-# average_rating(books_df)
-# top_N_binding(books_df)
-# total_pages_read(books_df)
-# average_pages_read(books_df)
-# shortest_and_longest_books(books_df)
-# oldest_book_read(books_df)
-# first_and_last_books_read(books_df)
-# books_read_per_month(books_df)
-# tag_distribution(books_df)
+
