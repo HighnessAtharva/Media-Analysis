@@ -4,7 +4,7 @@ import streamlit as st
 import numpy as np
 from functools import wraps
 from datetime import datetime
-
+import altair as alt
 
 def add_seperator(func):
     @wraps(func)
@@ -90,11 +90,18 @@ def top_N_authors(books_df: pd.DataFrame, num_authors: int, genre: str, year: in
             "Author"
         ].value_counts()  # count the number of books read by each author
         author_count = author_count[author_count > 1]
+        
         if author_count.empty or len(author_count) < num_authors:
             st.error("Not enough authors to in your library")
         else:
-            st.bar_chart(author_count.head(num_authors))
-
+            
+            chart = alt.Chart(author_count.head(num_authors).reset_index()).mark_bar().encode(
+                x=alt.X('index', sort='-y'),
+                y='Author',
+                color='Author'
+            )
+            st.altair_chart(chart, use_container_width=True)
+        
     # for specific genre and all years
     if genre != "All" and year == "All":
         st.markdown(f"### Top {num_authors} Authors in {genre.upper()} bookshelf")
@@ -105,7 +112,12 @@ def top_N_authors(books_df: pd.DataFrame, num_authors: int, genre: str, year: in
         if author_count.empty or len(author_count) < num_authors:
             st.error("Not enough authors to display for the given genre")
         else:
-            st.bar_chart(author_count.head(num_authors))
+            chart = alt.Chart(author_count.head(num_authors).reset_index()).mark_bar().encode(
+                x=alt.X('index', sort='-y'),
+                y='Author',
+                color='Author'
+            )
+            st.altair_chart(chart, use_container_width=True)
 
     # for all genres and specific year
     if year != "All" and genre == "All":
@@ -117,7 +129,12 @@ def top_N_authors(books_df: pd.DataFrame, num_authors: int, genre: str, year: in
         if author_count.empty or len(author_count) < num_authors:
             st.error("Not enough authors to display for the given year")
         else:
-            st.bar_chart(author_count.head(num_authors))
+            chart = alt.Chart(author_count.head(num_authors).reset_index()).mark_bar().encode(
+                x=alt.X('index', sort='-y'),
+                y='Author',
+                color='Author'
+            )
+            st.altair_chart(chart, use_container_width=True)
 
     # for specific genre and specific year
     if year != "All" and genre != "All":
@@ -129,7 +146,12 @@ def top_N_authors(books_df: pd.DataFrame, num_authors: int, genre: str, year: in
         if author_count.empty or len(author_count) < num_authors:
             st.error("Not enough authors to display for the given year and genre")
         else:
-            st.bar_chart(author_count.head(num_authors))
+            chart = alt.Chart(author_count.head(num_authors).reset_index()).mark_bar().encode(
+                x=alt.X('index', sort='-y'),
+                y='Author',
+                color='Author'
+            )
+            st.altair_chart(chart, use_container_width=True)
 
 
 @add_seperator
@@ -195,47 +217,63 @@ def average_rating_per_year(books_df: pd.DataFrame):
     st.line_chart(books_df, y="Average Rating")
 
 
-@st.cache_data
+# @st.cache_data
 @add_seperator
-def pages_read_per_month(books_df: pd.DataFrame, year: int):
-    st.markdown(f"### Pages Read per Month in {year}")
-    # filter the dataframe by year
-    books_df = books_df[books_df["Year"] == year]
+def pages_read_per_month(books_df: pd.DataFrame):
 
-    # keep only the columns we are interested in
-    books_df = books_df[["Number of Pages", "Date Read"]]
 
-    # drop all rows where Number of Pages is NaN
+
+    st.markdown("### Pages Read per Month (Yearly Comparison)")
+
+    # make a comparitive line graph of pages read per month for every year in the dataset
+
+    books_df = books_df[books_df["Year"] != ""]
+
+    # drop all nans
     books_df = books_df.dropna()
-
-    # add a new column for month
     books_df["Month"] = books_df["Date Read"].apply(lambda x: x.split("-")[1])
 
-    # remove the Date Read column
-    books_df = books_df.drop("Date Read", axis=1)
+    # keep only pages, year and month
+    books_df = books_df[["Number of Pages", "Year", "Month"]]
 
-    # group by month and sum the number of pages read
-    books_df = books_df.groupby("Month").sum()
+    # add rows for months that are not present in the dataset and set the number of pages to 0
+    months = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]
+    years = books_df["Year"].unique()
+    for year in years:
+        for month in months:
+            if month not in books_df[books_df["Year"] == year]["Month"].unique():
+                books_df = books_df.append(
+                    {"Number of Pages": 0, "Year": year, "Month": month},
+                    ignore_index=True,
+                )
 
-    # rename month column values to month names
-    books_df = books_df.rename(
-        index={
-            "01": "January",
-            "02": "February",
-            "03": "March",
-            "04": "April",
-            "05": "May",
-            "06": "June",
-            "07": "July",
-            "08": "August",
-            "09": "September",
-            "10": "October",
-            "11": "November",
-            "12": "December",
-        }
+    # Group the data by year and month and sum the number of pages read
+    grouped = books_df.groupby(["Year", "Month"]).agg({"Number of Pages": "sum"})
+
+    import calendar
+
+    # change the x axis values to add month name next to the month number
+    grouped = grouped.reset_index()
+    grouped["Month"] = grouped["Month"].apply(
+        lambda x: f"{str(x)}-" + calendar.month_name[int(x)]
     )
 
-    st.bar_chart(books_df, y="Number of Pages")
+    # plot the altair chart with x as month and y as number of pages with a line for each year in the multi-series line chart
+    st.altair_chart(
+        alt.Chart(grouped.reset_index())
+        .mark_line()
+        .encode(
+            x="Month",
+            y="Number of Pages",
+            color="Year",
+            tooltip=["Year", "Month", "Number of Pages"],
+        )
+        .interactive(),
+        use_container_width=True,
+        theme="streamlit",
+    )
+
+    # st.write(grouped)
 
 
 @st.cache_data
@@ -372,20 +410,33 @@ st.markdown(
 )
 
 st.write("---")
-st.info("Don't have a Goodreads account? Create one [here](https://www.goodreads.com/user/sign_up)")
-st.info("Don't have a Goodreads export file? Get an example one below 👇🏻")
 
-with open("pages/goodreads_export.csv", "rb") as goodreads_example:
-    btn = st.download_button(
+
+col1, col2 = st.columns(2, gap="large")
+
+with col1:
+
+    st.info(
+        "Don't have a Goodreads account? Create one [here](https://www.goodreads.com/user/sign_up)"
+    )
+    just_show_me_the_app = st.button("Use the DEMO CSV and skip the upload step")
+
+
+    
+with col2:
+    st.info("Don't have a Goodreads export file? Get an example one below 👇🏻")
+    with open("pages/goodreads_export.csv", "rb") as goodreads_example:
+        btn = st.download_button(
             label="Download Goodreads Export Example",
             data=goodreads_example,
             file_name="goodreads_export.csv",
             mime="text/csv",
             help="This is an example Goodreads export file. You can use this to test out the app.",
-          )
-    
+        )
+
+
 st.write("---")
-    
+
 # FILE UPLOAD WIDGET
 uploaded_file = st.file_uploader(
     label="Choose a Goodreads Export CSV File",
@@ -395,11 +446,11 @@ uploaded_file = st.file_uploader(
 )
 
 
-
-
-if uploaded_file is not None:
+if uploaded_file is not None or just_show_me_the_app:
+    if just_show_me_the_app:
+        uploaded_file = "pages/goodreads_export.csv"
+        
     books_df = pd.read_csv(uploaded_file, encoding="utf-8", header=0)
-
     # check if dataframe is valid by checking for columns
     # TODO: Add other columns here later
     if (
@@ -528,13 +579,12 @@ if uploaded_file is not None:
         year = st.selectbox(
             label="Select Year", options=years, index=0, key="monthwisereadingtrend"
         )
-        pages_read_per_month(books_df, year)
+        pages_read_per_month(books_df)
 
         general_stats_2(books_df)
 
     else:
         st.error("Invalid CSV File. Please upload a valid Goodreads CSV File.")
-
 
 
 # def top_N_publishers(books_df: pd.DataFrame, N: int = 10):
@@ -563,8 +613,3 @@ if uploaded_file is not None:
 #     print(tabulate(tabular_data=binding_count.head(N).to_frame(),
 #           headers=['Binding', 'Books Read'], tablefmt='fancy_grid'))
 #
-
-
-
-
-
