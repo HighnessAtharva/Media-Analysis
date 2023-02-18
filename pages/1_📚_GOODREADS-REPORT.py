@@ -1,12 +1,16 @@
-import pandas as pd
-import os
-import streamlit as st
-import numpy as np
-from functools import wraps
-from datetime import datetime
-import altair as alt
 import calendar
+import os
+from datetime import datetime
+from functools import wraps
+
+import altair as alt
+import numpy as np
+import pandas as pd
+import plotly.express as px
 import requests
+import streamlit as st
+from wordcloud import WordCloud
+
 
 def add_seperator(func):
     @wraps(func)
@@ -61,8 +65,20 @@ def general_stats(books_df: pd.DataFrame):
 def total_books_by_year(books_df: pd.DataFrame):
     st.header("Total Books Read by Year 🗓️")
     books_by_year = books_df["Year"].value_counts()
+ 
     books_by_year = books_by_year[books_by_year.index != ""]
     books_by_year = books_by_year.sort_index().astype(int)
+    
+    books_by_year_df = pd.DataFrame(books_by_year)
+    books_by_year_df = books_by_year_df.reset_index()
+    books_by_year_df.columns = ["Year", "Count"]
+    
+    st.success(f"🚀 Your read most books read in **{books_by_year_df['Year'].max().astype(int)}**! Totalling to {books_by_year_df['Count'].max()} books")
+    st.error(f"📉 You read the least books in **{books_by_year_df['Year'].min().astype(int)}**! Totalling to {books_by_year_df['Count'].min()} books")
+    
+    
+    
+    
     st.bar_chart(books_by_year)
 
 @add_seperator
@@ -159,7 +175,6 @@ def bottom_N_rated_books(books_df: pd.DataFrame, N: int):
 @st.cache_data
 @add_seperator
 def total_pages_per_year(books_df: pd.DataFrame):
-    st.markdown("### Total Pages Read per Year")
     books_df = books_df[books_df["Year"] != ""] # drop all nans
     books_df = books_df.dropna()
     books_df["Year"] = books_df["Year"].astype(int)
@@ -170,7 +185,6 @@ def total_pages_per_year(books_df: pd.DataFrame):
 @st.cache_data
 @add_seperator
 def average_rating_per_year(books_df: pd.DataFrame):
-    st.markdown("### Average Rating per Year") # do a time series plot of average rating per year
     books_df = books_df[books_df["Year"] != ""]
     books_df = books_df.dropna()
     books_df["Year"] = books_df["Year"].astype(int)
@@ -329,42 +343,167 @@ def general_stats_2(books_df: pd.DataFrame):
         
 def top_10_publishers(books_df: pd.DataFrame):
     st.header("Top 10 :blue[Publishers]")
+    st.info("Click on the legend to hide/show the publisher")
     publisher_count = books_df["Publisher"].value_counts()
     publisher_count = publisher_count[publisher_count > 1]
     publisher_count.index.name = "Publisher"
     publisher_count.name = "Count"
     if len(publisher_count) >= 10:
-        st.dataframe(publisher_count.head(10).to_frame(), width=300)
+        fig = px.pie(publisher_count.head(10), values='Count', names=publisher_count.head(10).index, labels={'Count':'Number of Books', 'index':'Publisher'})
+        
     else:
-        st.dataframe(publisher_count.head(len(publisher_count)).to_frame(), width=300)
+        fig = px.pie(publisher_count, values='Count', names=publisher_count.index, labels={'Count':'Number of Books', 'index':'Publisher'})
+        
+    st.plotly_chart(fig)
+    
     
 def top_bindings(books_df: pd.DataFrame):
     st.header("Top 10 :blue[Bindings]")
+    st.info("Click on the legend to hide/show types")
     binding_count = books_df["Binding"].value_counts()
     binding_count = binding_count[binding_count > 1]
-    binding_count.index.name = "Binding"
-    binding_count.name = "Count"
-    st.dataframe(binding_count.head(len(binding_count)).to_frame(), width=300)
+    fig = px.pie(binding_count, values='Binding', names=binding_count.index, labels={'Binding':'Number of Books', 'index':'Type of Binding'})
+    st.plotly_chart(fig)
+   
 
 
 def rating_distribution(books_df: pd.DataFrame):
-    st.header("Rating Distribution 🎯")
-    rating_count = books_df["My Rating"].value_counts()
-    rating_count = rating_count[rating_count > 1]
-    rating_count.index.name = "Rating"
-    rating_count.name = "Count"
+    st.header("Rating Distribution")
+    rating_count = books_df['My Rating'].value_counts().reset_index()
+    rating_count.columns = ['Rating', 'Count']
+
+    # remove ratings with 0 count
+    rating_count = rating_count[rating_count['Count'] > 0]
+     
+    # remove rating 0
+    rating_count = rating_count[rating_count['Rating'] > 0]
     
-    chart = alt.Chart(rating_count.to_frame().reset_index()).mark_bar().encode(
+    # Define custom color scheme
+    color_scale = alt.Scale(domain=rating_count['Rating'].tolist(),
+                            range=["#FF4136", "#FF851B", "#FFDC00", "#2ECC40", "#0074D9"])
+
+    # Create a bar chart using Altair
+    chart = alt.Chart(rating_count).mark_bar(
+        cornerRadiusTopLeft=3,
+        cornerRadiusTopRight=3,
+        size=30
+    ).encode(
         y=alt.Y("Rating:N", axis=alt.Axis(title="Rating")),
         x=alt.X("Count:Q", axis=alt.Axis(title="Count")),
+        color=alt.Color("Rating:N", scale=color_scale),
         tooltip=[alt.Tooltip("Count:Q")]
     ).properties(
         width=500,
-        height=450
+        height=380
     )
     chart.configure_axisX(labelAngle=0)
+
+    # Render the chart in Streamlit
     st.altair_chart(chart, use_container_width=True)
      
+
+def rating_vs_average_rating(books_df: pd.DataFrame):
+    # Comparison of your ratings vs. average ratings
+    # Scatter plot showing your ratings vs. the average ratings of the books you've read.
+    st.header("Rating vs. Average Rating")
+    
+    # Create a new dataframe with only the relevant columns
+    books_df2 = books_df[["Title", "My Rating", "Average Rating"]]
+  
+    # Create a scatter plot using Plotly and color-code the scatters based on My Rating and Average Rating
+    fig = px.scatter(
+        books_df2,
+        x="Average Rating",
+        y="My Rating",
+        hover_data=["Title"],
+        color="My Rating",
+        color_continuous_scale=px.colors.sequential.Greens
+    )
+
+    # Set the layout properties of the chart
+    fig.update_layout(
+        xaxis_title="Average Rating",
+        yaxis_title="My Rating",
+        height=400,
+        width=600,
+        margin=dict(l=40, r=40, b=40, t=40),
+        hoverlabel=dict(font_family="Arial")
+    )
+
+    # Render the chart in Streamlit
+    st.plotly_chart(fig)
+    
+    
+@add_seperator
+def publication_year_distribution(books_df: pd.DataFrame):
+    # Distribution of publication years
+    # Histogram or bar chart showing the number of books you've read published in each year.
+
+    st.header(":bar_chart: Publication Year Distribution")
+
+    # Filter out books with no publication year or invalid publication year
+    books_df = books_df[(books_df["Original Publication Year"].notna()) & (books_df["Original Publication Year"] > 0)]
+
+    # Create a histogram using Plotly
+    fig = px.histogram(
+        books_df,
+        x="Original Publication Year",
+        nbins=20,
+        color_discrete_sequence=["#800080"],
+        opacity=0.7,
+        labels={"Original Publication Year": "Publication Year", "count": "Number of Books"},
+        title="Distribution of Publication Years",
+    )
+
+    # Customize layout
+    fig.update_layout(
+        xaxis={"title": "Publication Year"},
+        yaxis={"title": "Number of Books"},
+        margin={"l": 60, "r": 20, "t": 70, "b": 50},
+    )
+
+    # Show figure
+    st.plotly_chart(fig, use_container_width=True)   
+                
+        
+         
+@st.cache_data
+def distribution_of_book_length(books_df: pd.DataFrame):  
+    st.header("Book Length Distribution")
+    st.info("Click on the legend to hide/show book length ranges")
+    books_df = books_df[books_df["Number of Pages"] > 0]
+    bins = [0, 100, 500 , 1000, float("inf")]
+    labels = ["<100", "100-500", "500-1000", ">1000"]
+    books_df["Page Ranges"] = pd.cut(books_df["Number of Pages"], bins=bins, labels=labels)
+    page_count = books_df["Page Ranges"].value_counts().reset_index()
+    page_count.columns = ["Page Ranges", "Count"]
+    
+    # Create a pie chart using Plotly
+    fig = px.pie(
+        page_count, 
+        values="Count", 
+        names="Page Ranges",
+        labels={"Page Ranges": "Page Range", "Count": "Number of Books"}
+    )
+    fig.update_traces(textposition="inside", textinfo="percent+label")
+    st.plotly_chart(fig)
+     
+     
+def book_title_word_cloud(books_df: pd.DataFrame):
+    st.header("Title Word Cloud")
+    books_df = books_df[books_df["Title"].notna()]    
+    titles = " ".join(books_df["Title"])
+    
+    wordcloud = WordCloud(
+        background_color="white",
+        width=800,
+        height=500,
+        max_words=100,
+        max_font_size=100,
+        random_state=42
+    ).generate(titles)
+     
+    st.image(wordcloud.to_array())
      
 
 ####################
@@ -450,6 +589,7 @@ if uploaded_file is not None or just_show_me_the_app:
         books_df = pd.read_csv(
             "csvs/goodreads/CHECKPOINT1.csv", encoding="utf-8", header=0
         )
+        
         # st.header("Data Preview")
         # st.dataframe(books_df)
         # st.markdown("---")
@@ -518,6 +658,24 @@ if uploaded_file is not None or just_show_me_the_app:
         
         top_N_authors(books_df, num_authors, genre, year)
         
+        
+        # MONTH WISE STATS
+        st.header("Month-Wise Reading Trend 📚")
+        pages_read_per_month(books_df)
+        
+        general_stats_2(books_df)
+        
+        # PUBLISHER, RATING DISTRIBUTION AND BINDING STATS
+        publisher_count = len(books_df["Publisher"].unique())
+        max_publishers = min(publisher_count, 20)
+        col1, col2= st.columns(2, gap="large")
+        with col1:
+            top_10_publishers(books_df)
+        with col2:
+            top_bindings(books_df)
+         
+        st.markdown("---")
+           
         # PER YEAR STATS
         col1, col2 = st.columns(2, gap="large")
         with col1:
@@ -527,25 +685,22 @@ if uploaded_file is not None or just_show_me_the_app:
             st.header("Average Rating Per Year ⌚")
             average_rating_per_year(books_df)
         
-        # MONTH WISE STATS
-        st.header("Month-Wise Reading Trend 📚")
-        years = years[1:] # remove "All" from years
-        year = st.selectbox(label="Select Year", options=years, index=0, key="monthwisereadingtrend")
         
-        pages_read_per_month(books_df)
-        
-        general_stats_2(books_df)
-        
-        # PUBLISHER, RATING DISTRIBUTION AND BINDING STATS
-        publisher_count = len(books_df["Publisher"].unique())
-        max_publishers = min(publisher_count, 20)
-        col1, col2, col3 = st.columns([1,2,1], gap="large")
+        col1, col2 = st.columns(2, gap="large")
         with col1:
-            top_10_publishers(books_df)
+            rating_vs_average_rating(books_df)
         with col2:
             rating_distribution(books_df)       
-        with col3:
-            top_bindings(books_df)
-            
+       
+       
+        publication_year_distribution(books_df)
+        
+        col1, col2= st.columns(2, gap="large")
+        with col1:
+            distribution_of_book_length(books_df)
+        
+        with col2:
+            book_title_word_cloud(books_df)
+
     else:
         st.error("Invalid CSV File. Please upload a valid Goodreads CSV File.")
