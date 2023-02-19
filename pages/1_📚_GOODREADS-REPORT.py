@@ -528,10 +528,10 @@ st.markdown(
     ### How it Works
     With the Goodreads Analysis Report, you simply upload your export CSV file from your Goodreads account and let the tool do the rest! Our tool uses advanced data analysis techniques to generate statistical reports and provide you with in-depth insights that are not available on the Goodreads platform. 📈
     ### Features
-    - Analyze Your Reading Data: Our tool provides detailed statistics on the books you've read, including the number of books you've read, the average rating, and the number of pages read.
-    - Discover Your Reading Habits: The Goodreads Analysis Report helps you understand your reading habits by providing information on the genres, authors, and publication years of the books you've read.
-    - Interactive Dashboards: The tool provides interactive dashboards that allow you to filter your data and explore your reading patterns visually. 
-    - Personalized Recommendations: Based on your reading history, the tool provides personalized recommendations for books that you might enjoy, making it easy to discover your next favorite read. 📚
+    - **Analyze Your Reading Data**: Our tool provides detailed statistics on the books you've read, including the number of books you've read, the average rating, and the number of pages read.
+    - **Discover Your Reading Habits**: The Goodreads Analysis Report helps you understand your reading habits by providing information on the genres, authors, and publication years of the books you've read.
+    - **Interactive Dashboards**: The tool provides interactive dashboards that allow you to filter your data and explore your reading patterns visually. 
+    - **Personalized Recommendations**: Based on your reading history, the tool provides personalized recommendations for books that you might enjoy, making it easy to discover your next favorite read. 📚
     ### How to Get Started
     To get started with the Goodreads Analysis Report, simply export your Goodreads data as a CSV file and upload it to our tool. From there, our tool will analyze your data and provide you with a comprehensive report on your reading habits. 
     So what are you waiting for? Try out the Goodreads Analysis Report today and start getting the most out of your reading data! 🚀
