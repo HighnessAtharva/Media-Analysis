@@ -288,10 +288,10 @@ if KEY_VERIFICATION_PASSED and diary_file is not None and ratings_file is not No
     movie_df = movie_df.drop(columns=['Date'])
     
     # check if csvs/Letterboxd folder exists and file CHECKPOINT1.csv exists, if not then run cleanup_dataframe
-    if not os.path.exists("csvs/Letterboxd/CHECKPOINT1.csv"):
+    if not os.path.exists("csvs/letterboxd/CHECKPOINT1.csv"):
         get_extend_dataframe_from_api(movie_df, user_api_key)
 
-    if not os.path.exists("csvs/Letterboxd/CHECKPOINT2.csv"):
+    if not os.path.exists("csvs/letterboxd/CHECKPOINT2.csv"):
         cleanup_dataframe(movie_df)
 
     movie_df = pd.read_csv(
@@ -299,7 +299,7 @@ if KEY_VERIFICATION_PASSED and diary_file is not None and ratings_file is not No
     )
 
     st.header("Data Preview")
-    # st.dataframe(movie_df)
+    st.dataframe(movie_df)
     st.markdown("---")
     
 # TODO: START DATA ANALYSIS HERE
