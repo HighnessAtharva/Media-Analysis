@@ -3,3 +3,4 @@ streamlit
 numpy
 requests
 plotly
+wordcloud
