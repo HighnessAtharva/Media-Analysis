@@ -15,109 +15,119 @@ import urllib
 # # DATA CLEANUP START #
 # #######################
 
+
 def get_omdb_data(title, release_year, user_api_key):
     # get the API key from the environment variables
 
     API_KEY = user_api_key
-    base_url = 'http://www.omdbapi.com/?'
-    parameters = {'apikey': API_KEY, 't': title, 'y': release_year}
-    params_encoded = urllib.parse.urlencode(parameters, quote_via=urllib.parse.quote, safe='')
+    base_url = "http://www.omdbapi.com/?"
+    parameters = {"apikey": API_KEY, "t": title, "y": release_year}
+    params_encoded = urllib.parse.urlencode(
+        parameters, quote_via=urllib.parse.quote, safe=""
+    )
     url = base_url + params_encoded
 
     response = requests.get(url).json()
 
     # Get the following data from OMDB
     # Runtime, Genre, Director, Rated, Language, Country, imdbRating, imdbVotes, BoxOffice
-    runtime = response['Runtime']
-    genre = response['Genre']
-    director = response['Director']
-    rated = response['Rated']
-    language = response['Language']
-    country = response['Country']
-    imdb_rating = response['imdbRating']
-    imdb_votes = response['imdbVotes']
-    box_office = response['BoxOffice']
-    return {'Runtime': runtime, 'Genre': genre, 'Director': director, 'Rated': rated, 'Language': language, 'Country': country, 'imdbRating': imdb_rating, 'imdbVotes': imdb_votes, 'BoxOffice': box_office}
+    runtime = response["Runtime"]
+    genre = response["Genre"]
+    director = response["Director"]
+    rated = response["Rated"]
+    language = response["Language"]
+    country = response["Country"]
+    imdb_rating = response["imdbRating"]
+    imdb_votes = response["imdbVotes"]
+    box_office = response["BoxOffice"]
+    return {
+        "Runtime": runtime,
+        "Genre": genre,
+        "Director": director,
+        "Rated": rated,
+        "Language": language,
+        "Country": country,
+        "imdbRating": imdb_rating,
+        "imdbVotes": imdb_votes,
+        "BoxOffice": box_office,
+    }
+
 
 def get_extend_dataframe_from_api(movie_df: pd.DataFrame, user_api_key):
     skipped_movies = []
-    
-    
+
     for idx, movie in enumerate(movie_df.iterrows(), start=1):
         try:
             # get omdb data for it and add it to the dataframe
-            name = movie[1]['Name']
-            year = int(movie[1]['Year'])
-            
+            name = movie[1]["Name"]
+            year = int(movie[1]["Year"])
+
             omdb_data = get_omdb_data(name, year, user_api_key)
 
             # add new columns to the dataframe
-            movie_df.loc[movie[0], 'Runtime'] = omdb_data['Runtime']
-            movie_df.loc[movie[0], 'Genre'] = omdb_data['Genre']
-            movie_df.loc[movie[0], 'Director'] = omdb_data['Director']
-            movie_df.loc[movie[0], 'Rated'] = omdb_data['Rated']
-            movie_df.loc[movie[0], 'Language'] = omdb_data['Language']
-            movie_df.loc[movie[0], 'Country'] = omdb_data['Country']
-            movie_df.loc[movie[0], 'imdbRating'] = omdb_data['imdbRating']
-            movie_df.loc[movie[0], 'imdbVotes'] = omdb_data['imdbVotes']
-            movie_df.loc[movie[0], 'BoxOffice'] = omdb_data['BoxOffice']
+            movie_df.loc[movie[0], "Runtime"] = omdb_data["Runtime"]
+            movie_df.loc[movie[0], "Genre"] = omdb_data["Genre"]
+            movie_df.loc[movie[0], "Director"] = omdb_data["Director"]
+            movie_df.loc[movie[0], "Rated"] = omdb_data["Rated"]
+            movie_df.loc[movie[0], "Language"] = omdb_data["Language"]
+            movie_df.loc[movie[0], "Country"] = omdb_data["Country"]
+            movie_df.loc[movie[0], "imdbRating"] = omdb_data["imdbRating"]
+            movie_df.loc[movie[0], "imdbVotes"] = omdb_data["imdbVotes"]
+            movie_df.loc[movie[0], "BoxOffice"] = omdb_data["BoxOffice"]
 
-            st.write(f'{idx}. ✅ Added data for {name} ({year})')
-                
+            st.write(f"{idx}. ✅ Added data for {name} ({year})")
 
         except Exception as e:
-            name = movie[1]['Name']
-            st.write(f'{idx}. ❌ Skipping {name} due to error: {e.__class__}')
+            name = movie[1]["Name"]
+            st.write(f"{idx}. ❌ Skipping {name} due to error: {e.__class__}")
             skipped_movies.append(name)
 
     # SAVE CHECKPOINT
     st.write(f"Total movies skipped: {len(skipped_movies)}")
     st.write(skipped_movies)
-    st.write(f"Processed {len(movie_df)-len(skipped_movies)}. Writing to CSV file. Saving Checkpoint!")
-    movie_df.to_csv('csvs/letterboxd/CHECKPOINT1.csv', index=False, encoding='utf-8')
+    st.write(
+        f"Processed {len(movie_df)-len(skipped_movies)}. Writing to CSV file. Saving Checkpoint!"
+    )
+    movie_df.to_csv("csvs/letterboxd/CHECKPOINT1.csv", index=False, encoding="utf-8")
 
 
 def cleanup_dataframe(movie_df: pd.DataFrame):
     # replace all "NA" values with NaN
-    movie_df = movie_df.replace('NA', pd.NA)
+    movie_df = movie_df.replace("NA", pd.NA)
 
     # count all NaN values in each column
-    print(f'Number of NaN values in each column: {movie_df.isna().sum()}')
+    print(f"Number of NaN values in each column: {movie_df.isna().sum()}")
 
     # keep only the first value of the runtime column (remove the 'min' part)
-    movie_df['Runtime'] = movie_df['Runtime'].str.split(' ').str[0]
+    movie_df["Runtime"] = movie_df["Runtime"].str.split(" ").str[0]
 
     # convert integer columns runtime, imdbRating, imdbVotes to int skip NaN values
-    movie_df['Runtime'] = movie_df['Runtime'].astype(int, errors='ignore')
-    movie_df['imdbRating'] = movie_df['imdbRating'].astype(int, errors='ignore')
-    movie_df['imdbVotes'] = movie_df['imdbVotes'].astype(int, errors='ignore')
-
+    movie_df["Runtime"] = movie_df["Runtime"].astype(int, errors="ignore")
+    movie_df["imdbRating"] = movie_df["imdbRating"].astype(int, errors="ignore")
+    movie_df["imdbVotes"] = movie_df["imdbVotes"].astype(int, errors="ignore")
 
     # remove the '$' and ',' from the BoxOffice column and convert to int
-    movie_df['BoxOffice'] = movie_df['BoxOffice'].str.replace('$', '')
-    movie_df['BoxOffice'] = movie_df['BoxOffice'].str.replace(',', '')
-    movie_df['BoxOffice'] = movie_df['BoxOffice'].astype(int, errors='ignore')
-
+    movie_df["BoxOffice"] = movie_df["BoxOffice"].str.replace("$", "")
+    movie_df["BoxOffice"] = movie_df["BoxOffice"].str.replace(",", "")
+    movie_df["BoxOffice"] = movie_df["BoxOffice"].astype(int, errors="ignore")
 
     # mutliply Rating by 2 to get a 10 point scale and convert to int
-    movie_df['Rating'] = movie_df['Rating'] * 2
-    movie_df['Rating'] = movie_df['Rating'].astype(int, errors='ignore')
+    movie_df["Rating"] = movie_df["Rating"] * 2
+    movie_df["Rating"] = movie_df["Rating"].astype(int, errors="ignore")
 
     # remove None values from the Language column
-    movie_df['Language'] = movie_df['Language'].str.replace('None', '')
+    movie_df["Language"] = movie_df["Language"].str.replace("None", "")
 
     # check if csvs folder exists
     if not os.path.exists("csvs"):
         os.mkdir("csvs")
         if not os.path.exists("csvs/letterboxd"):
             os.mkdir("csvs/letterboxd")
-            
+
     # SAVE CHECKPOINT
-    movie_df.to_csv('csvs/letterboxd/CHECKPOINT2.csv', index=False, encoding='utf-8')
-    
-    
-    
-    
+    movie_df.to_csv("csvs/letterboxd/CHECKPOINT2.csv", index=False, encoding="utf-8")
+
+
 # PAGE CONFIG
 st.set_page_config(
     page_title="Letterboxd Analysis",
@@ -173,7 +183,7 @@ with col1:
 with col2:
     st.info("Don't have a Letterboxd export file? Get an example one below 👇🏻")
 
-    col1, col2, col3 = st.columns([3,3,1], gap="small")
+    col1, col2, col3 = st.columns([3, 3, 1], gap="small")
     with col1:
         with open("pages/letterboxd_diary.csv", "rb") as letterboxd_diary:
             btn = st.download_button(
@@ -198,7 +208,6 @@ with col2:
         st.write("")
 
 
-
 st.write("---")
 # FILE UPLOAD WIDGET
 diary_file = st.file_uploader(
@@ -215,8 +224,11 @@ ratings_file = st.file_uploader(
     accept_multiple_files=False,
 )
 
-user_api_key=st.text_input("Enter your OMBD API key here", placeholder="Eight lettered OMDB API key", help="You can get your OMDB API key from here: http://www.omdbapi.com/apikey.aspx")
-
+user_api_key = st.text_input(
+    "Enter your OMBD API key here",
+    placeholder="Eight lettered OMDB API key",
+    help="You can get your OMDB API key from here: http://www.omdbapi.com/apikey.aspx",
+)
 
 
 # TODO: ADD A INPUT BOX FOR USERS TO ENTER THEIR OMBD KEY HERE AND MAKE ONE REQUEST TO CHECK ITS AUTHENTICITY. PROGRESS ONLY IF KEY IS VALID. MENTION THAT WE DO NOT STORE THE KEY IN ANY WAY. REQUEST LIMIT PER DAY IS 1000. PASS THAT KEY TI get_extend_dataframe_from_api function instead of using your own key.
@@ -224,49 +236,53 @@ user_api_key=st.text_input("Enter your OMBD API key here", placeholder="Eight le
 if diary_file is not None:
     # VERIFY FILE -> DIARY
     diary_df = pd.read_csv(diary_file, encoding="utf-8", header=0)
-    cols_to_check = ["Date","Name","Year","Letterboxd URI","Rating","Watched Date"]
-    if set(cols_to_check).issubset(set(diary_df.columns)):   
+    cols_to_check = ["Date", "Name", "Year", "Letterboxd URI", "Rating", "Watched Date"]
+    if set(cols_to_check).issubset(set(diary_df.columns)):
         st.success("Diary file uploaded successfully!")
         diary_df = diary_df[cols_to_check]
 
-    else: 
-        st.error("Diary file is not valid. Please upload a valid Letterboxd diary export file.")
+    else:
+        st.error(
+            "Diary file is not valid. Please upload a valid Letterboxd diary export file."
+        )
         st.stop()
 
 if ratings_file is not None:
     # VERIFY FILE -> RATINGS
     ratings_df = pd.read_csv(ratings_file, encoding="utf-8", header=0)
-    cols_to_check = ["Date","Name","Year","Rating"]
-    if set(cols_to_check).issubset(set(ratings_df.columns)): 
+    cols_to_check = ["Date", "Name", "Year", "Rating"]
+    if set(cols_to_check).issubset(set(ratings_df.columns)):
         st.success("Ratings file uploaded successfully!")
         ratings_df = ratings_df[cols_to_check]
 
     else:
-        st.error("Ratings file is not valid. Please upload a valid Letterboxd ratings export file.")
+        st.error(
+            "Ratings file is not valid. Please upload a valid Letterboxd ratings export file."
+        )
         st.stop()
 
-
-   
 
 if len(user_api_key) == 8:
     KEY_VERIFICATION_PASSED = False
     # get the movie name and year from the first row of the dataframe
-    name = 'Reservoir Dogs'
+    name = "Reservoir Dogs"
     year = 1992
-    base_url = 'http://www.omdbapi.com/?'
-    parameters = {'apikey': user_api_key, 't': name, 'y': year}
-    params_encoded = urllib.parse.urlencode(parameters, quote_via=urllib.parse.quote, safe='')
+    base_url = "http://www.omdbapi.com/?"
+    parameters = {"apikey": user_api_key, "t": name, "y": year}
+    params_encoded = urllib.parse.urlencode(
+        parameters, quote_via=urllib.parse.quote, safe=""
+    )
     url = base_url + params_encoded
 
     response = requests.get(url).json()
 
     # check status code of the response
-    if response['Response'] == 'True':
+    if response["Response"] == "True":
         st.success("This is a valid OMDB API Key.")
         KEY_VERIFICATION_PASSED = True
     else:
         st.error("This is not a valid OMDB API Key.")
-         
+
 else:
     st.error("Please enter a valid OMBD API key to continue.")
     st.stop()
@@ -278,15 +294,16 @@ if KEY_VERIFICATION_PASSED and diary_file is not None and ratings_file is not No
     # add column to movie_df for Watched Date
     movie_df["Watched Date"] = ""
 
-
     # check if ratings_df['Name'] is in diary_df['Name'] and value matches and if so then add diary_df['Watched Date'] to movie_df['Watched Date']
     for index, row in movie_df.iterrows():
-        if row['Name'] in diary_df['Name'].values:
-            movie_df.loc[index, 'Watched Date'] = diary_df.loc[diary_df['Name'] == row['Name'], 'Watched Date'].values[0]
+        if row["Name"] in diary_df["Name"].values:
+            movie_df.loc[index, "Watched Date"] = diary_df.loc[
+                diary_df["Name"] == row["Name"], "Watched Date"
+            ].values[0]
 
     # drop the Date column from movie_df
-    movie_df = movie_df.drop(columns=['Date'])
-    
+    movie_df = movie_df.drop(columns=["Date"])
+
     # check if csvs/Letterboxd folder exists and file CHECKPOINT1.csv exists, if not then run cleanup_dataframe
     if not os.path.exists("csvs/letterboxd/CHECKPOINT1.csv"):
         get_extend_dataframe_from_api(movie_df, user_api_key)
@@ -301,7 +318,7 @@ if KEY_VERIFICATION_PASSED and diary_file is not None and ratings_file is not No
     st.header("Data Preview")
     st.dataframe(movie_df)
     st.markdown("---")
-    
+
 # TODO: START DATA ANALYSIS HERE
 
 # #######################
@@ -365,7 +382,6 @@ if KEY_VERIFICATION_PASSED and diary_file is not None and ratings_file is not No
 #     print(tabulate(top_10_movies_by_box_office[['Name', 'BoxOffice']].head(10), headers = 'keys', tablefmt = 'fancy_grid', showindex=False))
 
 
-
 # def top_10_movies_by_genre(movie_df):
 #     # seperate genres into a list
 #     movie_df['Genre'] = movie_df['Genre'].str.split(', ')
@@ -375,7 +391,6 @@ if KEY_VERIFICATION_PASSED and diary_file is not None and ratings_file is not No
 #     top_10_movies_by_genre = movie_df.groupby('Genre').count().sort_values(by=['Name'], ascending=False)
 #     print(f'Top 10 movies by genre in {YEAR}')
 #     print(tabulate(tabular_data=top_10_movies_by_genre[['Name']].head(10), headers = ['Genre', 'Count'], tablefmt = 'fancy_grid', showindex=True))
-
 
 
 # def top_10_movies_by_director(movie_df):
@@ -396,7 +411,6 @@ if KEY_VERIFICATION_PASSED and diary_file is not None and ratings_file is not No
 #     top_10_movies_by_country = movie_df.groupby('Country').count().sort_values(by=['Name'], ascending=False)
 #     print(f'Top 10 movies by country in {YEAR}')
 #     print(tabulate(tabular_data=top_10_movies_by_country[['Name']].head(10), headers = ['Country', 'Count'], tablefmt = 'fancy_grid', showindex=True))
-
 
 
 # def first_and_last_movie_watched(movie_df):
@@ -484,7 +498,6 @@ if KEY_VERIFICATION_PASSED and diary_file is not None and ratings_file is not No
 #     print(tabulate(tabular_data=highly_rated_but_imdb_low[['Name', 'imdbRating', 'Rating']], headers = 'keys', tablefmt = 'fancy_grid', showindex=False))
 
 
-
 # def lowly_rated_but_imdb_high(movie_df):
 #     # check the imdb score for lowly rated movies (4.0-) but highly rated (8.0+) by you
 #     lowly_rated_but_imdb_high = movie_df[(movie_df['imdbRating'] <= 4.0) & (movie_df['Rating'] >= 8.0)]
@@ -522,7 +535,6 @@ if KEY_VERIFICATION_PASSED and diary_file is not None and ratings_file is not No
 
 # def least_watched_month(movie_df):
 #     pass
-
 
 
 # # LOAD/PROCESS CHECKPOINT 1
