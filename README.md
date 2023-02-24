@@ -1,6 +1,15 @@
 # Entertainment Data Analysis Web Application
+<img width="1604" src="https://raw.githubusercontent.com/HighnessAtharva/Media-Analysis/main/assets/screengrabs/0.png">
 
-This is a web application built with Streamlit for analyzing data from various entertainment platforms.
+ Welcome to my cutting-edge entertainment analysis tool, where data meets entertainment! With our sleek and intuitive Streamlit web application, you can dive deep into the world of your favorite platforms and uncover insights that you never knew existed. Get ready to discover the hidden gems, trending hits, and everything in between with just a few clicks. Let's turn data into entertainment magic!
+
+## Screenshots
+
+| 📕 Goodreads | 🍿 Letterboxd | 🎮 Steam |
+|:-------------------------:|:-------------------------:|:-------------------------:|
+|<img width="1604" src="https://github.com/HighnessAtharva/Media-Analysis/blob/main/assets/screengrabs/2.png?raw=true">  Dashboards |  <img width="1604" src="https://github.com/HighnessAtharva/Media-Analysis/blob/main/assets/screengrabs/8.png?raw=true"> In-Depth Analysis |<img width="1604" src="https://github.com/HighnessAtharva/Media-Analysis/blob/main/assets/screengrabs/9.png?raw=true"> Awesome Stats |
+|<img width="1604" src="https://github.com/HighnessAtharva/Media-Analysis/blob/main/assets/screengrabs/3.png?raw=true">  |  <img width="1604" src="https://github.com/HighnessAtharva/Media-Analysis/blob/main/assets/screengrabs/7.png?raw=true">|<img width="1604" src="https://github.com/HighnessAtharva/Media-Analysis/blob/main/assets/screengrabs/10.png?raw=true">|
+|<img width="1604" src="https://github.com/HighnessAtharva/Media-Analysis/blob/main/assets/screengrabs/4.png?raw=true">  |  <img width="1604" src="https://img.freepik.com/free-vector/coming-soon-construction-yellow-design_1017-26685.jpg">|<img width="1604" src="https://img.freepik.com/free-vector/coming-soon-construction-yellow-design_1017-26685.jpg">|
 
 ## Supported Platforms
 
