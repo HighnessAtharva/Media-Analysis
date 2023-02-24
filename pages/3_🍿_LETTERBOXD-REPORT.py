@@ -189,7 +189,7 @@ with col2:
 
     col1, col2, col3 = st.columns([3, 3, 1], gap="small")
     with col1:
-        with open("pages/letterboxd_diary.csv", "rb") as letterboxd_diary:
+        with open("pages/sample-csv/letterboxd_diary.csv", "rb") as letterboxd_diary:
             btn = st.download_button(
                 label="Download Diary Export Example",
                 data=letterboxd_diary,
@@ -199,7 +199,7 @@ with col2:
             )
 
     with col2:
-        with open("pages/letterboxd_ratings.csv", "rb") as letterboxd_ratings:
+        with open("pages/sample-csv/letterboxd_ratings.csv", "rb") as letterboxd_ratings:
             btn = st.download_button(
                 label="Download Ratings Export Example",
                 data=letterboxd_ratings,

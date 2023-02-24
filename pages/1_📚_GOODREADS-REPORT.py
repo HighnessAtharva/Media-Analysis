@@ -621,7 +621,7 @@ with col1:
 
 with col2:
     st.info("Don't have a Goodreads export file? Get an example one below 👇🏻")
-    with open("pages/goodreads_export.csv", "rb") as goodreads_example:
+    with open("pages/sample-csv/goodreads_export.csv", "rb") as goodreads_example:
         btn = st.download_button(
             label="Download Goodreads Export Example",
             data=goodreads_example,
@@ -641,7 +641,7 @@ uploaded_file = st.file_uploader(
 
 if uploaded_file is not None or just_show_me_the_app:
     if just_show_me_the_app:
-        uploaded_file = "pages/goodreads_export.csv"
+        uploaded_file = "pages/sample-csv/goodreads_export.csv"
     books_df = pd.read_csv(uploaded_file, encoding="utf-8", header=0)
 
     # check if dataframe is valid by checking for columns
