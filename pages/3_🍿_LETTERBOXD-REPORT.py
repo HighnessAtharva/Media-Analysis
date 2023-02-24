@@ -56,6 +56,8 @@ def get_omdb_data(title, release_year, user_api_key):
 def get_extend_dataframe_from_api(movie_df: pd.DataFrame, user_api_key):
     skipped_movies = []
 
+    col1, col2 = st.columns(2)
+    
     for idx, movie in enumerate(movie_df.iterrows(), start=1):
         try:
             # get omdb data for it and add it to the dataframe
@@ -75,7 +77,12 @@ def get_extend_dataframe_from_api(movie_df: pd.DataFrame, user_api_key):
             movie_df.loc[movie[0], "imdbVotes"] = omdb_data["imdbVotes"]
             movie_df.loc[movie[0], "BoxOffice"] = omdb_data["BoxOffice"]
 
-            st.write(f"{idx}. ✅ Added data for {name} ({year})")
+            if idx % 2 != 0:
+                with col1:
+                    st.write(f"{idx}. ✅ Added data for {name} ({year})")
+            else:
+                with col2:
+                    st.write(f"{idx}. ✅ Added data for {name} ({year})")
 
         except Exception as e:
             name = movie[1]["Name"]
@@ -84,7 +91,7 @@ def get_extend_dataframe_from_api(movie_df: pd.DataFrame, user_api_key):
 
     # SAVE CHECKPOINT
     st.write(f"Total movies skipped: {len(skipped_movies)}")
-    st.write(skipped_movies)
+    # st.write(skipped_movies)
     st.write(
         f"Processed {len(movie_df)-len(skipped_movies)}. Writing to CSV file. Saving Checkpoint!"
     )
@@ -94,9 +101,6 @@ def get_extend_dataframe_from_api(movie_df: pd.DataFrame, user_api_key):
 def cleanup_dataframe(movie_df: pd.DataFrame):
     # replace all "NA" values with NaN
     movie_df = movie_df.replace("NA", pd.NA)
-
-    # count all NaN values in each column
-    print(f"Number of NaN values in each column: {movie_df.isna().sum()}")
 
     # keep only the first value of the runtime column (remove the 'min' part)
     movie_df["Runtime"] = movie_df["Runtime"].str.split(" ").str[0]
@@ -304,15 +308,15 @@ if KEY_VERIFICATION_PASSED and diary_file is not None and ratings_file is not No
     # drop the Date column from movie_df
     movie_df = movie_df.drop(columns=["Date"])
 
-    # check if csvs/Letterboxd folder exists and file CHECKPOINT1.csv exists, if not then run cleanup_dataframe
-    if not os.path.exists("csvs/letterboxd/CHECKPOINT1.csv"):
-        get_extend_dataframe_from_api(movie_df, user_api_key)
+    # # check if csvs/Letterboxd folder exists and file CHECKPOINT1.csv exists, if not then run cleanup_dataframe
+    # if not os.path.exists("csvs/letterboxd/CHECKPOINT1.csv"):
+    get_extend_dataframe_from_api(movie_df, user_api_key)
 
-    if not os.path.exists("csvs/letterboxd/CHECKPOINT2.csv"):
-        cleanup_dataframe(movie_df)
+    # if not os.path.exists("csvs/letterboxd/CHECKPOINT2.csv"):
+    cleanup_dataframe(movie_df)
 
     movie_df = pd.read_csv(
-        "csvs/Letterboxd/CHECKPOINT2.csv", encoding="utf-8", header=0
+        "csvs/letterboxd/CHECKPOINT2.csv", encoding="utf-8", header=0
     )
 
     st.header("Data Preview")
