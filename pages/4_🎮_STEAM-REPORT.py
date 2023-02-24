@@ -14,7 +14,33 @@ st.set_page_config(
 )
 
 st.title(":violet[Steam] VideoGame Analysis :video_game:")
+st.warning("Please Note: This part of the app is still under construction. Check back soon for updates! 🚧")
+st.markdown(
+    """
+    Are you a gaming enthusiast who loves using Steam to keep track of your gaming history and discover new games to play? If so, then you're going to love the Steam Game Analysis Report tool. 🤩
 
+## How it Works 
+With the Steam Game Analysis Report, all you have to do is upload your Steam library export CSV file and let our tool do the rest. Our tool uses advanced data analysis techniques to generate statistical reports and provide you with in-depth insights that are not available on the Steam platform. 📈
+
+## Features 
+
+- **Analyze Your Gaming Habits:** Our tool provides detailed statistics on the games you've played, including the number of games played, average playtime, and total duration of games played.
+
+- **Discover Your Gaming Preferences:** The Steam Game Analysis Report helps you understand your gaming preferences by providing information on the genres, publishers, and developers you've played the most.
+
+- **Interactive Dashboards:** Our tool provides interactive dashboards that allow you to filter your data and explore your gaming patterns visually.
+
+- **Personalized Recommendations:** Based on your gaming history, our tool provides personalized recommendations for games that you might enjoy, making it easy to discover your next favorite game. 
+
+- **Time Period Graphs:** Our tool creates beautiful visualizations of your gaming history over time, allowing you to see your gaming habits and trends.
+
+- **Awesome Visualizations:** The Steam Game Analysis Report tool also tells a story about your preferences and gaming habits through beautiful visualizations and interactive reports. Our tool generates graphs, charts, and other visualizations that make it easy to understand your gaming habits at a glance.
+
+## How to Get Started 
+
+Getting started with the Steam Game Analysis Report tool is easy. Visit [Steam Exporter]( https://www.lorenzostanco.com/lab/steam/) and enter your username. Download the CSV and upload it below. Our tool will take care of the rest! Whether you're a gaming enthusiast or just curious about your gaming habits, our app makes it easy for you to gain insights into your gaming library. So, what are you waiting for? Upload your CSV file and start analyzing your data today! 🕹️   
+    """
+)
 
 # #######################
 # # DATA CLEANUP START #

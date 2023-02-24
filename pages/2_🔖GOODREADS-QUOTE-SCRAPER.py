@@ -140,7 +140,26 @@ st.title(":violet[Goodreads] Quote Scraper :bookmark:")
 # INTRO
 st.markdown(
     """
-    This app scrapes quotes from [Goodreads](https://www.goodreads.com/quotes) and returns a CSV file with the data.
+    This app scrapes quotes from [Goodreads](https://www.goodreads.com/quotes) and returns a CSV file with the data. If you're an avid reader and a data enthusiast, then the Goodreads Quote Scraper is the perfect app for you! 🤓
+
+## What is it? 🔎
+
+Goodreads Quote Scraper is a powerful data science app built with Streamlit that allows you to scrape quotes from the popular book social networking site called Goodreads. With just a few clicks, you can select your favorite author, set the limit of pages to scrape, and voila! You'll get a CSV file with all the data you need!
+
+## What does it do? 📈
+
+Goodreads Quote Scraper fetches quotes, books, authors, likes, and tags associated with the quote, all within minutes! 🚀You can process thousands of rows in a matter of minutes. The app runs smoothly, so there are no restrictions or limitations, and you don't even need an API key!
+
+## How does it work? 🔬
+
+The app uses web scraping techniques to collect and extract data from Goodreads. It then processes the data and presents it in an easy-to-use format, making data analysis a breeze. You can use the data for research, analysis, or any other purposes you desire.
+
+## Why should you use it?🎉
+
+Goodreads Quote Scraper is a one-stop-shop for all your data analysis needs. Whether you're a bookworm, a data scientist, or both, the app is user-friendly, quick, and reliable. It saves you time and effort, and the CSV format makes it easy to export and use the data.
+
+So, what are you waiting for? Try Goodreads Quote Scraper today and discover new insights from your favorite authors' quotes! 📚💻🔍
+
     """
 )
 
@@ -161,7 +180,7 @@ limit = st.number_input(
 author = author.lower()
 
 check_valid_btn = st.button(
-    "Check Author", key="check_author", help="Click to scrape quotes", type="primary"
+    "Collect Quotes", key="check_author", help="Click to scrape quotes", type="primary"
 )
 
 if check_valid_btn:
