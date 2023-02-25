@@ -42,11 +42,11 @@ def scrape_quotes(author, limit, current_timestamp):
     st.write("Looking through", limit, "pages")
 
     with open(
-            f"csvs/goodreads/quote-scraper/{author}_{current_timestamp}.csv",
-            "w",
-            encoding="utf-8",
-            newline="",
-        ) as quoteCSV:
+        f"csvs/goodreads/quote-scraper/{author}_{current_timestamp}.csv",
+        "w",
+        encoding="utf-8",
+        newline="",
+    ) as quoteCSV:
         fieldnames = ["quote", "author", "book", "tags", "likes"]
         writer = csv.DictWriter(quoteCSV, fieldnames=fieldnames)
         writer.writeheader()
@@ -233,9 +233,13 @@ if check_valid_btn:
             f"csvs/goodreads/quote-scraper/{author}_{current_timestamp}.csv", "rb"
         ) as quoteCSV:
 
+            st.markdown("Preview of the first 5 quotes:")
+            quotes_df = pd.read_csv(quoteCSV)
+            st.dataframe(quotes_df.head(5))
+
             # download button
             st.download_button(
-                label="Download CSV",
+                label="Download All Quotes",
                 data=quoteCSV,
                 file_name=f"{author.capitalize()}.csv",
                 mime="text/csv",

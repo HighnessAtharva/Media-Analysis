@@ -1,4 +1,5 @@
-# Entertainment Data Analysis Web Application
+# Entertainment Media Analysis
+
 <img width="1604" src="https://raw.githubusercontent.com/HighnessAtharva/Media-Analysis/main/assets/screengrabs/0.png">
 
  Welcome to my cutting-edge entertainment analysis tool, where data meets entertainment! With our sleek and intuitive Streamlit web application, you can dive deep into the world of your favorite platforms and uncover insights that you never knew existed. Get ready to discover the hidden gems, trending hits, and everything in between with just a few clicks. Let's turn data into entertainment magic!
@@ -25,7 +26,7 @@ To use this application, follow these steps:
 
 1. Clone this repository to your local machine
 2. Install the required dependencies using `pip install -r requirements.txt`
-3. Run the application using `streamlit run app.py`
+3. Run the application using `streamlit run ⭐MEDIA_ANALYSIS.py`
 4. Select a platform from the sidebar
 5. Upload your CSV file or download the example CSVs.
 6. Explore your data and gain insights!

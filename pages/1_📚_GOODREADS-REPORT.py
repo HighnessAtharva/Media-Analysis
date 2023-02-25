@@ -12,25 +12,9 @@ import streamlit as st
 from wordcloud import WordCloud
 
 
-def add_seperator(func):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        result = func(*args, **kwargs)
-        st.markdown("---")
-        return result
-
-    return wrapper
-
-
-def get_book_cover(bookISBN):
-    bookISBN = bookISBN[:-2]
-    book_cover = f"https://covers.openlibrary.org/b/isbn/{bookISBN}-L.jpg"
-    if len(bookISBN) == 13 and len(requests.get(book_cover).content) > 1000:
-        return book_cover
-    else:
-        return "https://islandpress.org/sites/default/files/default_book_cover_2015.jpg"
-
-
+# #######################
+# # DATA CLEANUP START #
+# #######################
 def cleanup_dataframe(books_df: pd.DataFrame):
     books_df = books_df.dropna(how="all", axis=0)  # check for null values and drop them
     books_df["Title"] = books_df["Title"].str.split("(", n=1, expand=True)[
@@ -55,6 +39,30 @@ def cleanup_dataframe(books_df: pd.DataFrame):
     books_df.to_csv(
         "csvs/goodreads/CHECKPOINT1.csv", index=False, encoding="utf-8"
     )  # write the dataframe to a csv file
+
+
+# #######################
+# # DATA ANALYSIS START #
+# #######################
+
+
+def add_seperator(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        result = func(*args, **kwargs)
+        st.markdown("---")
+        return result
+
+    return wrapper
+
+
+def get_book_cover(bookISBN):
+    bookISBN = bookISBN[:-2]
+    book_cover = f"https://covers.openlibrary.org/b/isbn/{bookISBN}-L.jpg"
+    if len(bookISBN) == 13 and len(requests.get(book_cover).content) > 1000:
+        return book_cover
+    else:
+        return "https://islandpress.org/sites/default/files/default_book_cover_2015.jpg"
 
 
 @add_seperator
@@ -497,9 +505,7 @@ def rating_vs_average_rating(books_df: pd.DataFrame):
 
 @add_seperator
 def publication_year_distribution(books_df: pd.DataFrame):
-    # Distribution of publication years
     # Histogram or bar chart showing the number of books you've read published in each year.
-
     st.header(":bar_chart: Publication Year Distribution")
 
     # Filter out books with no publication year or invalid publication year
@@ -574,9 +580,9 @@ def book_title_word_cloud(books_df: pd.DataFrame):
     st.image(wordcloud.to_array())
 
 
-####################
-## MAIN FUNCTION  ##
-####################
+# #########################
+# FRONT-END SECTION START #
+# #########################
 
 # CONFIG
 st.set_page_config(

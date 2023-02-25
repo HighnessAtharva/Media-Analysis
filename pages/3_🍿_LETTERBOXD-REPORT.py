@@ -17,17 +17,12 @@ import urllib
 
 
 def get_omdb_data(title, release_year, user_api_key):
-    # get the API key from the environment variables
-
     API_KEY = user_api_key
     base_url = "http://www.omdbapi.com/?"
     parameters = {"apikey": API_KEY, "t": title, "y": release_year}
-    params_encoded = urllib.parse.urlencode(
-        parameters, quote_via=urllib.parse.quote, safe=""
-    )
-    url = base_url + params_encoded
-
-    response = requests.get(url).json()
+    # params_encoded = urllib.parse.urlencode(parameters)
+    # url = base_url + params_encoded
+    response = requests.get(base_url, params=parameters).json()
 
     # Get the following data from OMDB
     # Runtime, Genre, Director, Rated, Language, Country, imdbRating, imdbVotes, BoxOffice
@@ -57,7 +52,7 @@ def get_extend_dataframe_from_api(movie_df: pd.DataFrame, user_api_key):
     skipped_movies = []
 
     col1, col2 = st.columns(2)
-    
+
     for idx, movie in enumerate(movie_df.iterrows(), start=1):
         try:
             # get omdb data for it and add it to the dataframe
@@ -99,16 +94,27 @@ def get_extend_dataframe_from_api(movie_df: pd.DataFrame, user_api_key):
 
 
 def cleanup_dataframe(movie_df: pd.DataFrame):
+    # rename columns
+    movie_df = movie_df.rename(
+        columns={
+            "Name": "Movie",
+            "Rating": "Your Rating",
+            "imdbRating": "IMDB Rating",
+            "imdbVotes": "IMDB Votes",
+            "Runtime": "Runtime (min)",
+        }
+    )
+
     # replace all "NA" values with NaN
     movie_df = movie_df.replace("NA", pd.NA)
 
     # keep only the first value of the runtime column (remove the 'min' part)
-    movie_df["Runtime"] = movie_df["Runtime"].str.split(" ").str[0]
+    movie_df["Runtime (min)"] = movie_df["Runtime (min)"].str.split(" ").str[0]
 
     # convert integer columns runtime, imdbRating, imdbVotes to int skip NaN values
-    movie_df["Runtime"] = movie_df["Runtime"].astype(int, errors="ignore")
-    movie_df["imdbRating"] = movie_df["imdbRating"].astype(int, errors="ignore")
-    movie_df["imdbVotes"] = movie_df["imdbVotes"].astype(int, errors="ignore")
+    movie_df["Runtime (min)"] = movie_df["Runtime (min)"].astype(int, errors="ignore")
+    movie_df["IMDB Rating"] = movie_df["IMDB Rating"].astype(int, errors="ignore")
+    movie_df["IMDB Votes"] = movie_df["IMDB Votes"].astype(int, errors="ignore")
 
     # remove the '$' and ',' from the BoxOffice column and convert to int
     movie_df["BoxOffice"] = movie_df["BoxOffice"].str.replace("$", "")
@@ -116,11 +122,27 @@ def cleanup_dataframe(movie_df: pd.DataFrame):
     movie_df["BoxOffice"] = movie_df["BoxOffice"].astype(int, errors="ignore")
 
     # mutliply Rating by 2 to get a 10 point scale and convert to int
-    movie_df["Rating"] = movie_df["Rating"] * 2
-    movie_df["Rating"] = movie_df["Rating"].astype(int, errors="ignore")
+    movie_df["Your Rating"] = movie_df["Your Rating"] * 2
+    movie_df["Your Rating"] = movie_df["Your Rating"].astype(int, errors="ignore")
 
     # remove None values from the Language column
     movie_df["Language"] = movie_df["Language"].str.replace("None", "")
+
+    # remove commas from Year, Runtime, imdbVotes, BoxOffice
+    movie_df["Year"] = movie_df["Year"].astype(str).str.replace(",", "")
+    movie_df["Runtime (min)"] = (
+        movie_df["Runtime (min)"].astype(str).str.replace(",", "")
+    )
+    movie_df["IMDB Votes"] = movie_df["IMDB Votes"].astype(str).str.replace(",", "")
+    movie_df["BoxOffice"] = movie_df["BoxOffice"].astype(str).str.replace(",", "")
+
+    # convert Year, Runtime, imdbVotes, BoxOffice to numeric
+    movie_df["Year"] = pd.to_numeric(movie_df["Year"], errors="coerce")
+    movie_df["Runtime (min)"] = pd.to_numeric(
+        movie_df["Runtime (min)"], errors="coerce"
+    )
+    movie_df["IMDB Votes"] = pd.to_numeric(movie_df["IMDB Votes"], errors="coerce")
+    movie_df["BoxOffice"] = pd.to_numeric(movie_df["BoxOffice"], errors="coerce")
 
     # check if csvs folder exists
     if not os.path.exists("csvs"):
@@ -131,6 +153,365 @@ def cleanup_dataframe(movie_df: pd.DataFrame):
     # SAVE CHECKPOINT
     movie_df.to_csv("csvs/letterboxd/CHECKPOINT2.csv", index=False, encoding="utf-8")
 
+
+# #######################
+# # DATA ANALYSIS START #
+# #######################
+
+
+def total_movies_watched(movie_df: pd.DataFrame):
+    st.header("Total Movies")
+    st.markdown(f"### {len(movie_df)}")
+
+
+def best_movies_by_rating(movie_df: pd.DataFrame):
+    movie_df = movie_df.sort_values(
+        by=["Your Rating", "IMDB Rating", "IMDB Votes"], ascending=False
+    )
+    movie_df = movie_df.set_index("Movie")
+    st.header("Your Favorite Movies")
+    st.dataframe(
+        movie_df.head(10)[["Your Rating", "IMDB Rating", "IMDB Votes"]],
+        use_container_width=True,
+    )
+
+
+def worst_movies_by_rating(movie_df: pd.DataFrame):
+    movie_df = movie_df.sort_values(
+        by=["Your Rating", "IMDB Rating", "IMDB Votes"], ascending=True
+    )
+    movie_df = movie_df.set_index("Movie")
+    st.header("Your Least Favorite Movies")
+    st.dataframe(
+        movie_df.head(10)[["Your Rating", "IMDB Rating", "IMDB Votes"]],
+        use_container_width=True,
+    )
+
+
+def longest_movies_by_runtime(movie_df: pd.DataFrame):
+    movie_df = movie_df.sort_values(by=["Runtime (min)"], ascending=False)
+    movie_df = movie_df.set_index("Movie")
+    st.header("Longest Runtime Movies")
+    st.dataframe(movie_df.head(10)[["Runtime (min)"]], use_container_width=True)
+
+
+def shortest_movies_by_runtime(movie_df: pd.DataFrame):
+    movie_df = movie_df.sort_values(by=["Runtime (min)"], ascending=True)
+    movie_df = movie_df.set_index("Movie")
+    st.header("Shortest Runtime Movies")
+    st.dataframe(movie_df.head(10)[["Runtime (min)"]], use_container_width=True)
+
+
+def best_movies_by_imdb_rating(movie_df: pd.DataFrame):
+    movie_df = movie_df.sort_values(by=["IMDB Rating", "IMDB Votes"], ascending=False)
+    movie_df = movie_df.set_index("Movie")
+    st.header("IMDBs Favorite Movies")
+    st.dataframe(
+        movie_df.head(10)[["IMDB Rating", "IMDB Votes"]], use_container_width=True
+    )
+
+
+def worst_movies_by_imdb_rating(movie_df: pd.DataFrame):
+    movie_df = movie_df.sort_values(by=["IMDB Rating", "IMDB Votes"], ascending=True)
+    movie_df = movie_df.set_index("Movie")
+    st.header("IMDBs Least Favorite Movies")
+    st.dataframe(
+        movie_df.head(10)[["IMDB Rating", "IMDB Votes"]], use_container_width=True
+    )
+
+
+def most_popular_movies(movie_df: pd.DataFrame):
+    movie_df = movie_df.sort_values(by=["IMDB Votes"], ascending=False)
+    movie_df["IMDB Votes"] = (movie_df["IMDB Votes"] / 1000).round(0)
+    movie_df["IMDB Votes"] = movie_df["IMDB Votes"].astype(str) + "K"
+    movie_df["IMDB Votes"] = movie_df["IMDB Votes"].str.replace(".0K", " K")
+    movie_df = movie_df.rename(
+        columns={"IMDB Votes": "IMDB Votes"}
+    )  # Renaming the column
+    movie_df = movie_df.set_index("Movie")
+    st.header("Most Popular Movies")
+    st.dataframe(movie_df.head(10)[["IMDB Votes"]], use_container_width=True)
+
+
+def most_watched_directors(movie_df: pd.DataFrame):
+    # get the count of most watched directors
+    director_df = (
+        movie_df["Director"]
+        .value_counts()
+        .rename_axis("Director")
+        .reset_index(name="Count")
+    )
+    director_df = director_df.sort_values(by=["Count"], ascending=False)
+    director_df = director_df.set_index("Director")
+    director_df = director_df.rename(columns={"Count": "Number of Movies Watched"})
+    st.header("Most Watched Directors")
+    st.dataframe(director_df.head(10), use_container_width=True)
+
+
+def highest_grossing_movies(movie_df: pd.DataFrame):
+    movie_df = movie_df.sort_values(by=["BoxOffice"], ascending=False)
+    movie_df["BoxOffice"] = (movie_df["BoxOffice"] / 1000000).round(2)
+    movie_df["BoxOffice"] = "$" + movie_df["BoxOffice"].astype(str) + " M"
+    movie_df = movie_df.set_index("Movie")
+    st.header("Highest Grossing Movies")
+    st.dataframe(movie_df.head(10)[["BoxOffice"]], use_container_width=True)
+
+
+def lowest_grossing_movies(movie_df: pd.DataFrame):
+    movie_df = movie_df.sort_values(by=["BoxOffice"], ascending=True)
+    movie_df["BoxOffice"] = "$" + movie_df["BoxOffice"].astype(str)
+    # remove last 2 characters
+    movie_df["BoxOffice"] = movie_df["BoxOffice"].str[:-2]
+    movie_df = movie_df.set_index("Movie")
+    st.header("Lowest Grossing Movies")
+    st.dataframe(movie_df.head(10)[["BoxOffice"]], use_container_width=True)
+
+
+def director_films_rating_ranked(movie_df: pd.DataFrame, director):
+    director_df = movie_df[movie_df["Director"] == director]
+    director_df = director_df.sort_values(
+        by=["Your Rating", "IMDB Rating"], ascending=False
+    )
+    director_df = director_df.set_index("Movie")
+    fig = px.bar(
+        director_df,
+        x=director_df.index,
+        y="Your Rating",
+        color="Your Rating",
+        title=f"{director}'s Movies Ranked By Your Rating",
+        color_continuous_scale=px.colors.sequential.Greens,
+    )
+    st.plotly_chart(fig, use_container_width=True)
+
+
+def pie_chart_genre(movie_df: pd.DataFrame):
+    # seperate genres into a list
+    movie_df["Genre"] = movie_df["Genre"].str.split(", ")
+    movie_df["Genre"] = movie_df["Genre"].str[0]
+    # explode the list into multiple rows
+    movie_df = movie_df.explode("Genre")
+    # group by genre and count the number of movies in each genre
+    genre_df = (
+        movie_df.groupby("Genre").count().sort_values(by=["Movie"], ascending=False)
+    )
+    fig = px.pie(genre_df, values="Movie", names=genre_df.index)
+    st.plotly_chart(fig, use_container_width=True)
+
+
+def pie_chart_parental_rating(movie_df: pd.DataFrame):
+    parental_rating_df = (
+        movie_df["Rated"].value_counts().rename_axis("Rated").reset_index(name="Count")
+    )
+    parental_rating_df = parental_rating_df.sort_values(by=["Count"], ascending=False)
+    fig = px.pie(parental_rating_df, values="Count", names=parental_rating_df["Rated"])
+    st.plotly_chart(fig, use_container_width=True)
+
+
+def pie_chart_country(movie_df: pd.DataFrame):
+    # get a list of all countries
+    country_list = movie_df["Country"]
+    # seperate countries into a list
+    movie_df["Country"] = movie_df["Country"].str.split(", ")
+    movie_df["Country"] = movie_df["Country"].str[0]
+    # explode the list into multiple rows
+    movie_df = movie_df.explode("Country")
+    # group by country and count the number of movies in each country
+    country_df = (
+        movie_df.groupby("Country").count().sort_values(by=["Movie"], ascending=False)
+    )
+
+    # group all countries with less than 5% of the total movies into 'Others'
+    total_movies = country_df["Movie"].sum()
+    other_movies = 0
+    for index, row in country_df.iterrows():
+        if row["Movie"] / total_movies < 0.01:
+            other_movies += row["Movie"]
+            country_df = country_df.drop(index)
+    country_df.loc["Others"] = other_movies
+
+    fig = px.pie(country_df, values="Movie", names=country_df.index)
+    st.plotly_chart(fig, use_container_width=True)
+
+
+def pie_chart_language(movie_df: pd.DataFrame):
+    # get a list of all languages
+    language_list = movie_df["Language"]
+
+    # seperate languages into a list, keep only the first language listed
+    movie_df["Language"] = movie_df["Language"].str.split(", ")
+    movie_df["Language"] = movie_df["Language"].str[0]
+
+    # explode the list into multiple rows
+    movie_df = movie_df.explode("Language")
+    # group by language and count the number of movies in each language
+    language_df = (
+        movie_df.groupby("Language").count().sort_values(by=["Movie"], ascending=False)
+    )
+
+    # group all languages with less than 5% of the total movies into 'Others'
+    total_movies = language_df["Movie"].sum()
+    other_movies = 0
+    for index, row in language_df.iterrows():
+        if row["Movie"] / total_movies < 0.01:
+            other_movies += row["Movie"]
+            language_df = language_df.drop(index)
+    language_df.loc["Others"] = other_movies
+
+    fig = px.pie(language_df, values="Movie", names=language_df.index)
+    st.plotly_chart(fig, use_container_width=True)
+
+
+# def top_10_movies_by_genre(movie_df):
+#     # seperate genres into a list
+#     movie_df['Genre'] = movie_df['Genre'].str.split(', ')
+#     # explode the list into multiple rows
+#     movie_df = movie_df.explode('Genre')
+#     # group by genre and count the number of movies in each genre
+#     top_10_movies_by_genre = movie_df.groupby('Genre').count().sort_values(by=['Movie'], ascending=False)
+#     print(f'Top 10 movies by genre in {YEAR}')
+#     print(tabulate(tabular_data=top_10_movies_by_genre[['Movie']].head(10), headers = ['Genre', 'Count'], tablefmt = 'fancy_grid', showindex=True))
+
+
+# def top_10_movies_by_director(movie_df):
+#     top_10_movies_by_director = movie_df.groupby('Director').count().sort_values(by=['Movie'], ascending=False)
+#     print(f'Top 10 movies by director in {YEAR}')
+#     print(tabulate(tabular_data=top_10_movies_by_director[['Movie']].head(10), headers = ['Director', 'Count'], tablefmt = 'fancy_grid', showindex=True))
+
+
+# def top_10_movies_by_language(movie_df):
+#     movie_df['Language'] = movie_df['Language'].str.split(', ').str[0]
+#     top_10_movies_by_language = movie_df.groupby('Language').count().sort_values(by=['Movie'], ascending=False)
+#     print(f'Top 10 movies by language in {YEAR}')
+#     print(tabulate(tabular_data=top_10_movies_by_language[['Movie']].head(10), headers = ['Language', 'Count'], tablefmt = 'fancy_grid', showindex=True))
+
+
+# def top_10_movies_by_country(movie_df):
+#     movie_df['Country'] = movie_df['Country'].str.split(', ').str[0]
+#     top_10_movies_by_country = movie_df.groupby('Country').count().sort_values(by=['Movie'], ascending=False)
+#     print(f'Top 10 movies by country in {YEAR}')
+#     print(tabulate(tabular_data=top_10_movies_by_country[['Movie']].head(10), headers = ['Country', 'Count'], tablefmt = 'fancy_grid', showindex=True))
+
+
+# def first_and_last_movie_watched(movie_df):
+#     first_movie_watched = movie_df.sort_values(by=['Watched Date'], ascending=True)
+#     first=first_movie_watched["Movie"].head(1).to_string(index=False)
+#     first_date=first_movie_watched["Watched Date"].head(1).to_string(index=False)
+
+#     last_movie_watched = movie_df.sort_values(by=['Watched Date'], ascending=False)
+#     last=last_movie_watched["Movie"].head(1).to_string(index=False)
+#     last_date=last_movie_watched["Watched Date"].head(1).to_string(index=False)
+
+#     print(tabulate(tabular_data=[['First Movie Watched', first, first_date], ['Last Movie Watched', last, last_date]], headers = ['#', 'Movie', 'Watched Date'], tablefmt = 'fancy_grid', showindex=False))
+
+
+# def top_10_box_office_flops(movie_df):
+#     top_10_box_office_flops = movie_df.sort_values(by=['BoxOffice'], ascending=True)
+#     # convert BoxOffice to millions and round to 2 decimal places and prefix with $ sign
+#     top_10_box_office_flops['BoxOffice'] = top_10_box_office_flops['BoxOffice']
+#     top_10_box_office_flops['BoxOffice'] = "$" + top_10_box_office_flops['BoxOffice'].astype(str)
+#     print(f'Top 10 box office flops in {YEAR}')
+#     print(tabulate(tabular_data=top_10_box_office_flops[['Movie', 'BoxOffice']].head(10), headers = 'keys', tablefmt = 'fancy_grid', showindex=False))
+
+
+# def top_10_imdb_rating_flops(movie_df):
+#     top_10_imdb_rating_flops = movie_df.sort_values(by=['IMDB Rating'], ascending=True)
+#     print(f'Top 10 IMDB rating flops in {YEAR}')
+#     print(tabulate(tabular_data=top_10_imdb_rating_flops[['Movie', 'IMDB Rating']].head(10), headers = 'keys', tablefmt = 'fancy_grid', showindex=False))
+
+
+# def top_10_worst_movies_by_your_rating(movie_df):
+#     top_10_worst_movies_by_your_rating = movie_df.sort_values(by=['Rating'], ascending=True)
+#     print(f'Top 10 worst movies by your rating in {YEAR}')
+#     print(tabulate(tabular_data=top_10_worst_movies_by_your_rating[['Movie', 'Rating']].head(10), headers = 'keys', tablefmt = 'fancy_grid', showindex=False))
+
+
+# def shortest_and_longest_movie_watched(movie_df):
+#     shortest_movie_watched = movie_df.sort_values(by=['Runtime (min)'], ascending=True)
+#     shortest=shortest_movie_watched["Movie"].head(1).to_string(index=False)
+#     shortest_runtime=shortest_movie_watched["Runtime (min)"].head(1).to_string(index=False)
+
+#     longest_movie_watched = movie_df.sort_values(by=['Runtime (min)'], ascending=False)
+#     longest=longest_movie_watched["Movie"].head(1).to_string(index=False)
+#     longest_runtime=longest_movie_watched["Runtime (min)"].head(1).to_string(index=False)
+#     print(tabulate(tabular_data=[['Shortest Movie Watched', shortest, shortest_runtime], ['Longest Movie Watched', longest, longest_runtime]], headers = ['#', 'Movie', 'Runtime (min)'], tablefmt = 'fancy_grid', showindex=False))
+
+
+# def total_time_watched(movie_df):
+#     total_minutes_watched = movie_df['Runtime (min)'].sum()
+#     # convert minutes to hours and minutes
+#     hours, minutes = divmod(total_minutes_watched, 60)
+#     hours, minutes = int(hours), int(minutes)
+#     print(tabulate(tabular_data=[['Total Hours Watched', f'{hours} hours and {minutes} minutes']], headers = ['#', 'Runtime Sum'], tablefmt = 'fancy_grid', showindex=False))
+
+
+# def average_movie_rating(movie_df):
+#     average_movie_rating = movie_df['Rating'].mean().round(2)
+#     print(tabulate(tabular_data=[['Average Movie Rating', average_movie_rating]], headers = ['#', 'Rating'], tablefmt = 'fancy_grid', showindex=False))
+
+
+# def average_movie_runtime(movie_df):
+#     average_movie_runtime = movie_df['Runtime (min)'].mean()
+#     # convert minutes to hours and minutes
+#     hours, minutes = divmod(average_movie_runtime, 60)
+#     hours, minutes = int(hours), int(minutes)
+#     print(tabulate(tabular_data=[['Average Movie Runtime', f'{hours} hours and {minutes} minutes']], headers = ['#', 'Runtime (min)'], tablefmt = 'fancy_grid', showindex=False))
+
+
+# def oldest_release_date(movie_df):
+#     oldest_release_date = movie_df.sort_values(by=['Year'], ascending=True)
+#     oldest=oldest_release_date["Movie"].head(1).to_string(index=False)
+#     oldest_release=oldest_release_date["Year"].head(1).to_string(index=False)
+#     print(tabulate(tabular_data=[['Oldest Release Date', oldest, oldest_release]], headers = ['#', 'Movie', 'Release Date'], tablefmt = 'fancy_grid', showindex=False))
+
+
+# def adult_movies_watched(movie_df):
+#     adult_movies_watched = movie_df[movie_df['Rated'] == 'R']
+#     print(f'Adult movies watched in {YEAR}: {adult_movies_watched["Movie"].count()}')
+#     print(tabulate(tabular_data=adult_movies_watched[['Movie', 'Rated']], headers = 'keys', tablefmt = 'fancy_grid', showindex=False))
+
+
+# def highly_rated_but_imdb_low(movie_df:pd.DataFrame):
+#     # check the imdb score for highly rated movies (8.0+) but low Rating (4.0-)
+#     highly_rated_but_imdb_low = movie_df[(movie_df['IMDB Rating'] >= 8.0) & (movie_df['Rating'] <= 4.0)]
+#     print(f'Highly rated by audiences but low Rating by you in {YEAR}: {highly_rated_but_imdb_low["Movie"].count()}')
+#     print(tabulate(tabular_data=highly_rated_but_imdb_low[['Movie', 'IMDB Rating', 'Rating']], headers = 'keys', tablefmt = 'fancy_grid', showindex=False))
+
+
+# def lowly_rated_but_imdb_high(movie_df):
+#     # check the imdb score for lowly rated movies (4.0-) but highly rated (8.0+) by you
+#     lowly_rated_but_imdb_high = movie_df[(movie_df['IMDB Rating'] <= 4.0) & (movie_df['Rating'] >= 8.0)]
+#     print(f'Lowly rated by audiences but highly rated by you in {YEAR}: {lowly_rated_but_imdb_high["Movie"].count()}')
+#     print(tabulate(tabular_data=lowly_rated_but_imdb_high[['Movie', 'IMDB Rating', 'Rating']], headers = 'keys', tablefmt = 'fancy_grid', showindex=False))
+
+
+# # TODO: Function needs to be tested
+# def longest_watch_streak(movie_df):
+#     from datetime import timedelta
+#     # sort by date
+#     movie_df = movie_df.sort_values(by=['Watched Date'], ascending=True)
+#     # create a new column with the difference between the current date and the previous date
+#     movie_df['Watched Date'] = pd.to_datetime(movie_df['Watched Date'])
+#     movie_df['streak'] = movie_df['Watched Date'].diff()
+
+#     # select date column where streak is max
+#     longest_streak = movie_df.loc[movie_df['streak'].idxmax()]
+#     jump_days = longest_streak['streak'].days+1
+
+#     # go back jump_day rows to get the movie before the longest streak
+#     movie_before_streak = movie_df.iloc[movie_df.index.get_loc(longest_streak.name) - jump_days]
+
+#     # get the date of the movie before the longest streak
+#     start = movie_before_streak['Watched Date'].date()
+
+#     # add the jump_days to the start date to get the end date
+#     end = start + timedelta(days=jump_days)
+#     end = end.strftime('%Y-%m-%d')
+#     print(tabulate(tabular_data=[['Longest Watch Streak', f'{jump_days} days', start, end]], headers = ['#', 'Days', 'Start', 'End'], tablefmt = 'fancy_grid', showindex=False))
+
+
+# #########################
+# FRONT-END SECTION START #
+# #########################
 
 # PAGE CONFIG
 st.set_page_config(
@@ -143,7 +524,9 @@ st.set_page_config(
 # PAGE TITLE
 st.title(":orange[Letterboxd] Movie Analysis :popcorn:")
 
-st.warning("Please Note: This part of the app is still under construction. Check back soon for updates! 🚧")
+st.warning(
+    "Please Note: This part of the app is still under construction. Check back soon for updates! 🚧"
+)
 
 # INTRO
 st.markdown(
@@ -177,6 +560,9 @@ So why wait? Try out the Letterboxd Movie Analysis Report tool today and unlock 
 )
 
 st.write("---")
+st.warning(
+    "Please Note: CSV should not contain more than 1000 movies. OMDB API has a limit of 1000 requests per day. If you have more than 1000 movies, please split your CSV into multiple CSVs and upload them separately using different OMDB API Keys. 🛑"
+)
 
 col1, col2 = st.columns(2, gap="large")
 with col1:
@@ -199,7 +585,9 @@ with col2:
             )
 
     with col2:
-        with open("pages/sample-csv/letterboxd_ratings.csv", "rb") as letterboxd_ratings:
+        with open(
+            "pages/sample-csv/letterboxd_ratings.csv", "rb"
+        ) as letterboxd_ratings:
             btn = st.download_button(
                 label="Download Ratings Export Example",
                 data=letterboxd_ratings,
@@ -298,7 +686,7 @@ if KEY_VERIFICATION_PASSED and diary_file is not None and ratings_file is not No
     # add column to movie_df for Watched Date
     movie_df["Watched Date"] = ""
 
-    # check if ratings_df['Name'] is in diary_df['Name'] and value matches and if so then add diary_df['Watched Date'] to movie_df['Watched Date']
+    # check if ratings_df['Movie'] is in diary_df['Movie'] and value matches and if so then add diary_df['Watched Date'] to movie_df['Watched Date']
     for index, row in movie_df.iterrows():
         if row["Name"] in diary_df["Name"].values:
             movie_df.loc[index, "Watched Date"] = diary_df.loc[
@@ -319,263 +707,90 @@ if KEY_VERIFICATION_PASSED and diary_file is not None and ratings_file is not No
         "csvs/letterboxd/CHECKPOINT2.csv", encoding="utf-8", header=0
     )
 
-    st.header("Data Preview")
-    st.dataframe(movie_df)
+    # st.header("Data Preview")
+    # st.dataframe(movie_df)
     st.markdown("---")
 
-# TODO: START DATA ANALYSIS HERE
-
-# #######################
-# # DATA ANALYSIS START #
-# #######################
-
-
-# def total_movies_watched(movie_df: pd.DataFrame):
-#     total_movies_watched = len(movie_df)
-#     print(tabulate([['Total movies watched', total_movies_watched]], headers=['Metric', 'Value'], tablefmt='fancy_grid'))
-
-
-# def top_10_movies_by_rating(movie_df: pd.DataFrame):
-#     top_10_movies_by_rating = movie_df.sort_values(by=['Rating'], ascending=False)
-#     print(f'Top 10 movies in {YEAR}')
-#     print(tabulate(tabular_data=top_10_movies_by_rating[['Name', 'Rating']].head(10).values, headers=['Movie', 'Your Rating'], tablefmt='fancy_grid'))
-
-
-# def top_10_movies_by_runtime(movie_df):
-#     top_10_movies_by_runtime = movie_df.sort_values(by=['Runtime'], ascending=False)
-#     print(f'Top 10 movies by runtime in {YEAR}')
-#     print(tabulate(tabular_data=top_10_movies_by_runtime[['Name', 'Runtime']].head(10).values, headers=['Movie', 'Runtime (mins)'], tablefmt='fancy_grid'))
-
-
-# def top_10_movies_by_imdb_rating(movie_df):
-#     top_10_movies_by_imdb_rating = movie_df.sort_values(by=['imdbRating'], ascending=False)
-#     print(f'Top 10 movies by IMDB rating in {YEAR}')
-#     print(tabulate(tabular_data=top_10_movies_by_imdb_rating[['Name', 'imdbRating']].head(10).values, headers=['Movie', 'IMDB Rating'], tablefmt='fancy_grid'))
-
-
-# def top_10_movies_by_imdb_votes(movie_df):
-#     # remove commas from imdbVotes column
-#     movie_df['imdbVotes'] = movie_df['imdbVotes'].str.replace(',', '')
-
-#     # convert imdbVotes to numeric
-#     movie_df['imdbVotes'] = pd.to_numeric(movie_df['imdbVotes'], errors='coerce')
-
-#     # divide imdbVotes by 1000 to get the number of thousands of votes
-#     movie_df['imdbVotes'] = (movie_df['imdbVotes'] / 1000).round(0)
-
-
-#     top_10_movies_by_imdb_votes = movie_df.sort_values(by=['imdbVotes'], ascending=False)
-
-#     # append 'K' to the end of the imdbVotes column
-#     top_10_movies_by_imdb_votes['imdbVotes'] = top_10_movies_by_imdb_votes['imdbVotes'].astype(str) + ' K'
-
-#     # remove .0 from the end of the imdbVotes column
-#     top_10_movies_by_imdb_votes['imdbVotes'] = top_10_movies_by_imdb_votes['imdbVotes'].str.replace('.0 K', ' K')
-
-
-#     print(f'Top 10 movies by IMDB votes in {YEAR}')
-#     print(tabulate(tabular_data=top_10_movies_by_imdb_votes[['Name', 'imdbVotes']].head(10).values, headers=['Movie', 'IMDB Votes'], tablefmt='fancy_grid'))
-
-
-# def top_10_movies_by_box_office(movie_df):
-#     top_10_movies_by_box_office = movie_df.sort_values(by=['BoxOffice'], ascending=False)
-#     # convert BoxOffice to millions and round to 2 decimal places and prefix with $ sign
-#     top_10_movies_by_box_office['BoxOffice'] = (top_10_movies_by_box_office['BoxOffice'] / 1000000).round(2)
-#     top_10_movies_by_box_office['BoxOffice'] = "$" + top_10_movies_by_box_office['BoxOffice'].astype(str) + ' M'
-#     print(f'Top 10 movies by box office in {YEAR}')
-#     print(tabulate(top_10_movies_by_box_office[['Name', 'BoxOffice']].head(10), headers = 'keys', tablefmt = 'fancy_grid', showindex=False))
-
-
-# def top_10_movies_by_genre(movie_df):
-#     # seperate genres into a list
-#     movie_df['Genre'] = movie_df['Genre'].str.split(', ')
-#     # explode the list into multiple rows
-#     movie_df = movie_df.explode('Genre')
-#     # group by genre and count the number of movies in each genre
-#     top_10_movies_by_genre = movie_df.groupby('Genre').count().sort_values(by=['Name'], ascending=False)
-#     print(f'Top 10 movies by genre in {YEAR}')
-#     print(tabulate(tabular_data=top_10_movies_by_genre[['Name']].head(10), headers = ['Genre', 'Count'], tablefmt = 'fancy_grid', showindex=True))
-
-
-# def top_10_movies_by_director(movie_df):
-#     top_10_movies_by_director = movie_df.groupby('Director').count().sort_values(by=['Name'], ascending=False)
-#     print(f'Top 10 movies by director in {YEAR}')
-#     print(tabulate(tabular_data=top_10_movies_by_director[['Name']].head(10), headers = ['Director', 'Count'], tablefmt = 'fancy_grid', showindex=True))
-
-
-# def top_10_movies_by_language(movie_df):
-#     movie_df['Language'] = movie_df['Language'].str.split(', ').str[0]
-#     top_10_movies_by_language = movie_df.groupby('Language').count().sort_values(by=['Name'], ascending=False)
-#     print(f'Top 10 movies by language in {YEAR}')
-#     print(tabulate(tabular_data=top_10_movies_by_language[['Name']].head(10), headers = ['Language', 'Count'], tablefmt = 'fancy_grid', showindex=True))
-
-
-# def top_10_movies_by_country(movie_df):
-#     movie_df['Country'] = movie_df['Country'].str.split(', ').str[0]
-#     top_10_movies_by_country = movie_df.groupby('Country').count().sort_values(by=['Name'], ascending=False)
-#     print(f'Top 10 movies by country in {YEAR}')
-#     print(tabulate(tabular_data=top_10_movies_by_country[['Name']].head(10), headers = ['Country', 'Count'], tablefmt = 'fancy_grid', showindex=True))
-
-
-# def first_and_last_movie_watched(movie_df):
-#     first_movie_watched = movie_df.sort_values(by=['Watched Date'], ascending=True)
-#     first=first_movie_watched["Name"].head(1).to_string(index=False)
-#     first_date=first_movie_watched["Watched Date"].head(1).to_string(index=False)
-
-#     last_movie_watched = movie_df.sort_values(by=['Watched Date'], ascending=False)
-#     last=last_movie_watched["Name"].head(1).to_string(index=False)
-#     last_date=last_movie_watched["Watched Date"].head(1).to_string(index=False)
-
-#     print(tabulate(tabular_data=[['First Movie Watched', first, first_date], ['Last Movie Watched', last, last_date]], headers = ['#', 'Movie', 'Watched Date'], tablefmt = 'fancy_grid', showindex=False))
-
-
-# def top_10_box_office_flops(movie_df):
-#     top_10_box_office_flops = movie_df.sort_values(by=['BoxOffice'], ascending=True)
-#     # convert BoxOffice to millions and round to 2 decimal places and prefix with $ sign
-#     top_10_box_office_flops['BoxOffice'] = top_10_box_office_flops['BoxOffice']
-#     top_10_box_office_flops['BoxOffice'] = "$" + top_10_box_office_flops['BoxOffice'].astype(str)
-#     print(f'Top 10 box office flops in {YEAR}')
-#     print(tabulate(tabular_data=top_10_box_office_flops[['Name', 'BoxOffice']].head(10), headers = 'keys', tablefmt = 'fancy_grid', showindex=False))
-
-
-# def top_10_imdb_rating_flops(movie_df):
-#     top_10_imdb_rating_flops = movie_df.sort_values(by=['imdbRating'], ascending=True)
-#     print(f'Top 10 IMDB rating flops in {YEAR}')
-#     print(tabulate(tabular_data=top_10_imdb_rating_flops[['Name', 'imdbRating']].head(10), headers = 'keys', tablefmt = 'fancy_grid', showindex=False))
-
-
-# def top_10_worst_movies_by_your_rating(movie_df):
-#     top_10_worst_movies_by_your_rating = movie_df.sort_values(by=['Rating'], ascending=True)
-#     print(f'Top 10 worst movies by your rating in {YEAR}')
-#     print(tabulate(tabular_data=top_10_worst_movies_by_your_rating[['Name', 'Rating']].head(10), headers = 'keys', tablefmt = 'fancy_grid', showindex=False))
-
-
-# def shortest_and_longest_movie_watched(movie_df):
-#     shortest_movie_watched = movie_df.sort_values(by=['Runtime'], ascending=True)
-#     shortest=shortest_movie_watched["Name"].head(1).to_string(index=False)
-#     shortest_runtime=shortest_movie_watched["Runtime"].head(1).to_string(index=False)
-
-#     longest_movie_watched = movie_df.sort_values(by=['Runtime'], ascending=False)
-#     longest=longest_movie_watched["Name"].head(1).to_string(index=False)
-#     longest_runtime=longest_movie_watched["Runtime"].head(1).to_string(index=False)
-#     print(tabulate(tabular_data=[['Shortest Movie Watched', shortest, shortest_runtime], ['Longest Movie Watched', longest, longest_runtime]], headers = ['#', 'Movie', 'Runtime'], tablefmt = 'fancy_grid', showindex=False))
-
-
-# def total_time_watched(movie_df):
-#     total_minutes_watched = movie_df['Runtime'].sum()
-#     # convert minutes to hours and minutes
-#     hours, minutes = divmod(total_minutes_watched, 60)
-#     hours, minutes = int(hours), int(minutes)
-#     print(tabulate(tabular_data=[['Total Hours Watched', f'{hours} hours and {minutes} minutes']], headers = ['#', 'Runtime Sum'], tablefmt = 'fancy_grid', showindex=False))
-
-
-# def average_movie_rating(movie_df):
-#     average_movie_rating = movie_df['Rating'].mean().round(2)
-#     print(tabulate(tabular_data=[['Average Movie Rating', average_movie_rating]], headers = ['#', 'Rating'], tablefmt = 'fancy_grid', showindex=False))
-
-
-# def average_movie_runtime(movie_df):
-#     average_movie_runtime = movie_df['Runtime'].mean()
-#     # convert minutes to hours and minutes
-#     hours, minutes = divmod(average_movie_runtime, 60)
-#     hours, minutes = int(hours), int(minutes)
-#     print(tabulate(tabular_data=[['Average Movie Runtime', f'{hours} hours and {minutes} minutes']], headers = ['#', 'Runtime'], tablefmt = 'fancy_grid', showindex=False))
-
-
-# def oldest_release_date(movie_df):
-#     oldest_release_date = movie_df.sort_values(by=['Year'], ascending=True)
-#     oldest=oldest_release_date["Name"].head(1).to_string(index=False)
-#     oldest_release=oldest_release_date["Year"].head(1).to_string(index=False)
-#     print(tabulate(tabular_data=[['Oldest Release Date', oldest, oldest_release]], headers = ['#', 'Movie', 'Release Date'], tablefmt = 'fancy_grid', showindex=False))
-
-
-# def adult_movies_watched(movie_df):
-#     adult_movies_watched = movie_df[movie_df['Rated'] == 'R']
-#     print(f'Adult movies watched in {YEAR}: {adult_movies_watched["Name"].count()}')
-#     print(tabulate(tabular_data=adult_movies_watched[['Name', 'Rated']], headers = 'keys', tablefmt = 'fancy_grid', showindex=False))
-
-
-# def highly_rated_but_imdb_low(movie_df):
-#     # check the imdb score for highly rated movies (8.0+) but low Rating (4.0-)
-#     highly_rated_but_imdb_low = movie_df[(movie_df['imdbRating'] >= 8.0) & (movie_df['Rating'] <= 4.0)]
-#     print(f'Highly rated by audiences but low Rating by you in {YEAR}: {highly_rated_but_imdb_low["Name"].count()}')
-#     print(tabulate(tabular_data=highly_rated_but_imdb_low[['Name', 'imdbRating', 'Rating']], headers = 'keys', tablefmt = 'fancy_grid', showindex=False))
-
-
-# def lowly_rated_but_imdb_high(movie_df):
-#     # check the imdb score for lowly rated movies (4.0-) but highly rated (8.0+) by you
-#     lowly_rated_but_imdb_high = movie_df[(movie_df['imdbRating'] <= 4.0) & (movie_df['Rating'] >= 8.0)]
-#     print(f'Lowly rated by audiences but highly rated by you in {YEAR}: {lowly_rated_but_imdb_high["Name"].count()}')
-#     print(tabulate(tabular_data=lowly_rated_but_imdb_high[['Name', 'imdbRating', 'Rating']], headers = 'keys', tablefmt = 'fancy_grid', showindex=False))
-
-
-# # TODO: Function needs to be tested
-# def longest_watch_streak(movie_df):
-#     from datetime import timedelta
-#     # sort by date
-#     movie_df = movie_df.sort_values(by=['Watched Date'], ascending=True)
-#     # create a new column with the difference between the current date and the previous date
-#     movie_df['Watched Date'] = pd.to_datetime(movie_df['Watched Date'])
-#     movie_df['streak'] = movie_df['Watched Date'].diff()
-
-#     # select date column where streak is max
-#     longest_streak = movie_df.loc[movie_df['streak'].idxmax()]
-#     jump_days = longest_streak['streak'].days+1
-
-#     # go back jump_day rows to get the movie before the longest streak
-#     movie_before_streak = movie_df.iloc[movie_df.index.get_loc(longest_streak.name) - jump_days]
-
-#     # get the date of the movie before the longest streak
-#     start = movie_before_streak['Watched Date'].date()
-
-#     # add the jump_days to the start date to get the end date
-#     end = start + timedelta(days=jump_days)
-#     end = end.strftime('%Y-%m-%d')
-#     print(tabulate(tabular_data=[['Longest Watch Streak', f'{jump_days} days', start, end]], headers = ['#', 'Days', 'Start', 'End'], tablefmt = 'fancy_grid', showindex=False))
-
-
-# def most_watched_month(movie_df):
-#     pass
-
-# def least_watched_month(movie_df):
-#     pass
-
-
-# # LOAD/PROCESS CHECKPOINT 1
-# if os.path.isfile('CHECKPOINT1.csv'):
-#     movie_df = pd.read_csv('CHECKPOINT1.csv', encoding='utf-8')
-#     print(f'Loaded checkpoint file #1. Continuing from {len(movie_df)} movies.')
-# else:
-#     get_extend_dataframe_from_api(movie_df)
-
-# # LOAD/PROCESS CHECKPOINT 2
-# if os.path.isfile('CHECKPOINT2.csv'):
-#     movie_df = pd.read_csv('CHECKPOINT2.csv', encoding='utf-8')
-#     print(f'Loaded checkpoint file #2. Continuing from {len(movie_df)} movies.')
-# else:
-#     cleanup_dataframe(movie_df)
-
-
-# total_movies_watched(movie_df)
-# total_time_watched(movie_df)
-# average_movie_rating(movie_df)
-# adult_movies_watched(movie_df)
-# average_movie_runtime(movie_df)
-# longest_watch_streak(movie_df)
-# top_10_movies_by_rating(movie_df)
-# top_10_movies_by_runtime(movie_df)
-# top_10_movies_by_imdb_rating(movie_df)
-# top_10_movies_by_imdb_votes(movie_df)
-# top_10_movies_by_box_office(movie_df)
-# top_10_movies_by_genre(movie_df)
-# top_10_movies_by_director(movie_df)
-# top_10_movies_by_language(movie_df)
-# top_10_movies_by_country(movie_df)
-# first_and_last_movie_watched(movie_df)
-# top_10_box_office_flops(movie_df)
-# top_10_imdb_rating_flops(movie_df)
-# top_10_worst_movies_by_your_rating(movie_df)
-# shortest_and_longest_movie_watched(movie_df)
-# oldest_release_date(movie_df)
-# highly_rated_but_imdb_low(movie_df)
-# lowly_rated_but_imdb_high(movie_df)
+    total_movies_watched(movie_df)
+
+    col1, col2 = st.columns(2, gap="large")
+
+    with col1:
+        best_movies_by_rating(movie_df)
+
+    with col2:
+        worst_movies_by_rating(movie_df)
+
+    col1, col2 = st.columns(2, gap="large")
+
+    with col1:
+        longest_movies_by_runtime(movie_df)
+
+    with col2:
+        shortest_movies_by_runtime(movie_df)
+
+    col1, col2 = st.columns(2, gap="large")
+    with col1:
+        best_movies_by_imdb_rating(movie_df)
+
+    with col2:
+        worst_movies_by_imdb_rating(movie_df)
+
+    col1, col2 = st.columns(2, gap="large")
+    with col1:
+        most_popular_movies(movie_df)
+
+    with col2:
+        most_watched_directors(movie_df)
+
+    col1, col2 = st.columns(2, gap="large")
+    with col1:
+        highest_grossing_movies(movie_df)
+
+    with col2:
+        lowest_grossing_movies(movie_df)
+
+    st.info("🔖 Note: The Box Office figures are for US and Canada only, not worldwide.")
+
+    st.header("Directory Rankings by Your Rating")
+
+    # get a list of all directors where the number of movies they have directed is greater than 2
+    st.info("🔖 Note: Only directors with more than 2 movies are shown.")
+    directors = movie_df["Director"].value_counts()
+    directors = directors[directors > 2]
+    directors = directors.index.tolist()
+    # alphabetically sort the list
+    directors.sort()
+    # add a None option to the list on top
+    directors.insert(0, None)
+    selected_director = st.selectbox(
+        options=directors, label="Select Director", key="director_ranking", index=0
+    )
+    if selected_director is not None:
+        director_films_rating_ranked(movie_df, selected_director)
+    else:
+        st.error("Please select a director to continue.")
+
+    col1, col2 = st.columns(2, gap="large")
+    with col1:
+        st.header("Genre Distribution")
+        pie_chart_genre(movie_df)
+    with col2:
+        st.header("Parental Rating Distribution")
+        pie_chart_parental_rating(movie_df)
+
+    st.info(
+        "🔖 Note: These pie charts are interactive. Hover over the slices to see the exact values. Click on the legend to hide/show the slices."
+    )
+
+    col1, col2 = st.columns(2, gap="large")
+    with col1:
+        st.header("Country Distribution")
+        pie_chart_country(movie_df)
+    with col2:
+        st.header("Language Distribution")
+        pie_chart_language(movie_df)
+
+    st.info(
+        "🔖 Note: These pie charts are interactive. Hover over the slices to see the exact values. Click on the legend to hide/show the slices."
+    )
