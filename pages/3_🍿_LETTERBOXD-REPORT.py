@@ -158,7 +158,16 @@ def cleanup_dataframe(movie_df: pd.DataFrame):
 # # DATA ANALYSIS START #
 # #######################
 
+def add_seperator(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        result = func(*args, **kwargs)
+        st.markdown("---")
+        return result
 
+    return wrapper
+
+@add_seperator
 def total_movies_watched(movie_df: pd.DataFrame):
     st.header("Total Movies")
     st.markdown(f"### {len(movie_df)}")
@@ -266,7 +275,7 @@ def lowest_grossing_movies(movie_df: pd.DataFrame):
     st.header("Lowest Grossing Movies")
     st.dataframe(movie_df.head(10)[["BoxOffice"]], use_container_width=True)
 
-
+@add_seperator
 def director_films_rating_ranked(movie_df: pd.DataFrame, director):
     director_df = movie_df[movie_df["Director"] == director]
     director_df = director_df.sort_values(
@@ -360,24 +369,77 @@ def pie_chart_language(movie_df: pd.DataFrame):
     fig = px.pie(language_df, values="Movie", names=language_df.index)
     st.plotly_chart(fig, use_container_width=True)
 
+@add_seperator
+def top_movies_by_genre(movie_df: pd.DataFrame, genre: str, sort_criteria: str):
+    # drop NA values from Genre
+    movie_df = movie_df.dropna(subset=["Genre"])
+    
+    # get movies where genre is in the list of genres
+    genre_df = movie_df[movie_df["Genre"].str.contains(genre)]
+     
+    if sort_criteria == "Your Rating":
+        # drop NA values
+        genre_df = genre_df.dropna(subset=["Your Rating"])
+        genre_df = genre_df.sort_values(by=["Your Rating", "IMDB Rating"], ascending=False)
+        y=color= "Your Rating"
+    
+    elif sort_criteria == "IMDB Rating":
+        # drop NA values
+        genre_df = genre_df.dropna(subset=["IMDB Rating"])
+        genre_df = genre_df.sort_values(by=["IMDB Rating", "Your Rating"], ascending=False)
+        y=color= "IMDB Rating"
+        
+    elif sort_criteria == "Runtime":
+        # drop NA values
+        genre_df = genre_df.dropna(subset=["Runtime (min)"])
+        genre_df = genre_df.sort_values(by=["Runtime (min)"], ascending=False)
+        y=color= "Runtime (min)"
+    
+    elif sort_criteria == "Box Office":
+        # drop NA values
+        genre_df = genre_df.dropna(subset=["BoxOffice"])
+        genre_df = genre_df.sort_values(by=["BoxOffice"], ascending=False)
+        y=color = "BoxOffice"
+    
+    genre_df = genre_df.set_index("Movie")
+    fig = px.bar(
+        genre_df,
+        x=genre_df.index,
+        y=y,
+        color=color,
+        title=f"All {genre} Movies Ranked By {sort_criteria}",
+        color_continuous_scale=px.colors.sequential.Mint,
+        height=800,
+    )
+    st.plotly_chart(fig, use_container_width=True)
+      
 
-# def top_10_movies_by_genre(movie_df):
-#     # seperate genres into a list
-#     movie_df['Genre'] = movie_df['Genre'].str.split(', ')
-#     # explode the list into multiple rows
-#     movie_df = movie_df.explode('Genre')
-#     # group by genre and count the number of movies in each genre
-#     top_10_movies_by_genre = movie_df.groupby('Genre').count().sort_values(by=['Movie'], ascending=False)
-#     print(f'Top 10 movies by genre in {YEAR}')
-#     print(tabulate(tabular_data=top_10_movies_by_genre[['Movie']].head(10), headers = ['Genre', 'Count'], tablefmt = 'fancy_grid', showindex=True))
-
-
-# def top_10_movies_by_director(movie_df):
-#     top_10_movies_by_director = movie_df.groupby('Director').count().sort_values(by=['Movie'], ascending=False)
-#     print(f'Top 10 movies by director in {YEAR}')
-#     print(tabulate(tabular_data=top_10_movies_by_director[['Movie']].head(10), headers = ['Director', 'Count'], tablefmt = 'fancy_grid', showindex=True))
-
-
+@add_seperator  
+def top_movies_by_language(movie_df, language):
+    # drop NA values from Language
+    movie_df = movie_df.dropna(subset=["Language"])
+    
+    # get movies where language is in the list of languages
+    language_df = movie_df[movie_df["Language"].str.contains(language)]
+    
+    # drop NA values
+    language_df = language_df.dropna(subset=["Your Rating"])
+    
+    # sort by Your Rating and IMDB Rating
+    language_df = language_df.sort_values(by=["Your Rating", "IMDB Rating"], ascending=False)
+    language_df = language_df.set_index("Movie")
+    fig = px.bar(
+        language_df,
+        x=language_df.index,
+        y="Your Rating",
+        color="Your Rating",
+        title=f"All {language} Movies Ranked By Your Rating",
+        color_continuous_scale=px.colors.sequential.ice_r,
+        height=800,
+    )
+    st.plotly_chart(fig, use_container_width=True)
+    
+    
 # def top_10_movies_by_language(movie_df):
 #     movie_df['Language'] = movie_df['Language'].str.split(', ').str[0]
 #     top_10_movies_by_language = movie_df.groupby('Language').count().sort_values(by=['Movie'], ascending=False)
@@ -721,6 +783,7 @@ if KEY_VERIFICATION_PASSED and diary_file is not None and ratings_file is not No
     with col2:
         worst_movies_by_rating(movie_df)
 
+    st.markdown("---")
     col1, col2 = st.columns(2, gap="large")
 
     with col1:
@@ -729,6 +792,7 @@ if KEY_VERIFICATION_PASSED and diary_file is not None and ratings_file is not No
     with col2:
         shortest_movies_by_runtime(movie_df)
 
+    st.markdown("---")
     col1, col2 = st.columns(2, gap="large")
     with col1:
         best_movies_by_imdb_rating(movie_df)
@@ -736,6 +800,7 @@ if KEY_VERIFICATION_PASSED and diary_file is not None and ratings_file is not No
     with col2:
         worst_movies_by_imdb_rating(movie_df)
 
+    st.markdown("---")
     col1, col2 = st.columns(2, gap="large")
     with col1:
         most_popular_movies(movie_df)
@@ -743,6 +808,7 @@ if KEY_VERIFICATION_PASSED and diary_file is not None and ratings_file is not No
     with col2:
         most_watched_directors(movie_df)
 
+    st.markdown("---")
     col1, col2 = st.columns(2, gap="large")
     with col1:
         highest_grossing_movies(movie_df)
@@ -750,8 +816,12 @@ if KEY_VERIFICATION_PASSED and diary_file is not None and ratings_file is not No
     with col2:
         lowest_grossing_movies(movie_df)
 
+
     st.info("🔖 Note: The Box Office figures are for US and Canada only, not worldwide.")
 
+
+    
+    st.markdown("---")
     st.header("Directory Rankings by Your Rating")
 
     # get a list of all directors where the number of movies they have directed is greater than 2
@@ -770,7 +840,8 @@ if KEY_VERIFICATION_PASSED and diary_file is not None and ratings_file is not No
         director_films_rating_ranked(movie_df, selected_director)
     else:
         st.error("Please select a director to continue.")
-
+        
+    
     col1, col2 = st.columns(2, gap="large")
     with col1:
         st.header("Genre Distribution")
@@ -782,7 +853,8 @@ if KEY_VERIFICATION_PASSED and diary_file is not None and ratings_file is not No
     st.info(
         "🔖 Note: These pie charts are interactive. Hover over the slices to see the exact values. Click on the legend to hide/show the slices."
     )
-
+    
+    st.markdown("---")
     col1, col2 = st.columns(2, gap="large")
     with col1:
         st.header("Country Distribution")
@@ -794,3 +866,52 @@ if KEY_VERIFICATION_PASSED and diary_file is not None and ratings_file is not No
     st.info(
         "🔖 Note: These pie charts are interactive. Hover over the slices to see the exact values. Click on the legend to hide/show the slices."
     )
+    st.markdown("---")
+
+    st.header("Movie Rankings by Genre")
+    genre_list = movie_df["Genre"].unique().tolist()
+    
+    col1, col2 = st.columns(2, gap="large")
+    
+    with col1:
+        # remove nan values from the list
+        genre_list = [x for x in genre_list if str(x) != 'nan']
+        # add None to the list on top
+        genre_list.insert(0, None)
+        
+        
+        selected_genre=st.selectbox("Select Genre", options=genre_list, key="genre_ranking", index=0)
+    
+    with col2:
+         sorted_by=st.selectbox("Sort By", options=["Your Rating", "IMDB Rating", "Runtime", "Box Office"], key="genre_ranking_sort", index=0)
+    
+    st.info("Hey, if you see too many bars, select an area of the chart by draggin your mouse and zoom in. You can also zoom out by double clicking on the chart.")
+    
+    if selected_genre:
+        top_movies_by_genre(movie_df, selected_genre, sorted_by)
+    
+    
+    
+    st.header("Movie Rankings by Language")
+
+    lang_list = movie_df["Language"].unique().tolist()
+    
+    # remove nan values from the list
+    lang_list = [x for x in lang_list if str(x) != 'nan']
+    
+    # remove '' values from the list
+    lang_list = [x for x in lang_list if str(x) != '']
+    
+    # remove languages for which there are less than 5 movies
+    lang_list = [x for x in lang_list if len(movie_df[movie_df['Language'] == x]) > 5]
+     
+    # add None to the list on top
+    lang_list.insert(0, None)
+    selected_language=st.selectbox("Select Language", options=lang_list, key="language_ranking", index=0)
+    
+    st.info("Hey, if you see too many bars, select an area of the chart by draggin your mouse and zoom in. You can also zoom out by double clicking on the chart.")
+        
+    if selected_language:
+        top_movies_by_language(movie_df, selected_language)
+    
+     
