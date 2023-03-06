@@ -1,12 +1,8 @@
 import json
 import os
-
 import regex as re
 import streamlit as st
-from dotenv import load_dotenv
 from lyricsgenius import Genius
-
-load_dotenv()
 
 
 def genius_to_json(album, artist):
@@ -122,7 +118,7 @@ btn = st.button("Get the Lyrics and Annotations", key="genius")
 
 if len(album) and len(artist) >= 2 and btn:
     # grab environment variables
-    genius_access_token = os.getenv("GENIUS_CLIENT_ACCESS_TOKEN")
+    genius_access_token = st.secrets["GENIUS_CLIENT_ACCESS_TOKEN"]
 
     # instantiate genius object
     genius = Genius(genius_access_token)
