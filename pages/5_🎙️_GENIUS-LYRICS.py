@@ -117,11 +117,11 @@ artist = st.text_input("Artist Name", placeholder="Enter the artist name")
 btn = st.button("Get the Lyrics and Annotations", key="genius")
 
 if len(album) and len(artist) >= 2 and btn:
-    # grab environment variables
-    genius_access_token = st.secrets["GENIUS_CLIENT_ACCESS_TOKEN"]
+    
+    # genius_access_token = st.secrets["GENIUS_CLIENT_ACCESS_TOKEN"]
 
     # instantiate genius object
-    genius = Genius(genius_access_token)
+    genius = Genius("pCgIOvoAnE1lYO2v5bwvFQGbPDWpyChM4iCTu6174fWJ9kJzmZJ3L1VrFkBe91rR")
 
     with st.spinner(
         f"Getting Lyrics and Annotations from Genius for {album} by {artist}..."
