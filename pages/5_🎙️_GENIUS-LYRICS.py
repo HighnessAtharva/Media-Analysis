@@ -50,7 +50,7 @@ def JSON_to_MD(album, artist):
 
                 # LYRICS
                 if lyrics:
-                    lyrics = lyrics.replace(f"Lyrics", "")
+                    lyrics = lyrics.replace("Lyrics", "")
                     f2.write(lyrics)
                 else:
                     f2.write("**Lyrics not available**")
