@@ -1,5 +1,6 @@
 import json
 import os
+
 import regex as re
 import streamlit as st
 from lyricsgenius import Genius
@@ -9,7 +10,7 @@ def genius_to_json(album, artist):
 
     try:
         response = genius.search_album(name=album, artist=artist)
-        os.chdir("csvs/genius")
+        os.chdir("csvs/genius/")
         response.save_lyrics(f"{album} By {artist}")
         os.chdir("../..")
     except AttributeError:
@@ -117,7 +118,7 @@ artist = st.text_input("Artist Name", placeholder="Enter the artist name")
 btn = st.button("Get the Lyrics and Annotations", key="genius")
 
 if len(album) and len(artist) >= 2 and btn:
-    
+
     # genius_access_token = st.secrets["GENIUS_CLIENT_ACCESS_TOKEN"]
 
     # instantiate genius object
