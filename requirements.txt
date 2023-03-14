@@ -2,6 +2,7 @@ altair==4.2.2
 beautifulsoup4==4.11.2
 feedparser==6.0.10
 lyricsgenius==3.0.1
+mdutils==1.5.1
 numpy==1.23.4
 pandas==1.5.1
 plotly==5.11.0
