@@ -1,3 +1,14 @@
+"""
+AUTHOR: @highnessatharva<highnessatharva@gmail.com>
+
+DATE: 2023-02-19
+
+DESCRIPTION: Generate a report of your Steam library. The app returns a CSV file with the data. It takes a CSV file as input.  
+
+API KEY: None 
+"""
+
+
 import json
 import os
 from functools import wraps

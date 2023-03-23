@@ -1,3 +1,14 @@
+"""
+AUTHOR: @highnessatharva<highnessatharva@gmail.com>
+
+DATE: 2023-02-17
+
+DESCRIPTION: Download all quotes associated with an author from Goodreads based on the number of pages you want to scrape. The app returns a CSV file with the data. 
+
+API KEYS: None
+"""
+
+
 import contextlib
 import csv
 

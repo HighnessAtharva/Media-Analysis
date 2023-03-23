@@ -1,3 +1,13 @@
+"""
+AUTHOR: @highnessatharva<highnessatharva@gmail.com>
+
+DATE: 2023-03-13
+
+DESCRIPTION: Automatically generates a markdown file containing all your reviews and ratings for the movies you have watched in the latest month, with an upper limit of 50. Takes the RSS feed URL of a user as input.
+
+API KEY: None 
+"""
+
 from datetime import datetime
 
 import feedparser
@@ -73,7 +83,7 @@ if rss_to_fetch and submit:
                 entry
                 for entry in d.entries
                 if int(entry.letterboxd_watcheddate[5:7].lstrip("0"))
-                == datetime.now().month
+                == datetime.now().month - 2
             ]
 
             st.write(f"Found {len(d.entries)} entries for the current month.")

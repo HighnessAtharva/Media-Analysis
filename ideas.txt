@@ -1,0 +1,6 @@
+# RYM 2 Blog
+- upload RateYourMusic Review csv with (need at least 100 reviews, use someone else's account if you don't have enough reviews)
+- allow users to select month
+- extract month reviews and ratings based on selection
+- sanitize album and artist
+- grab album cover, summary and metadata from the album title and the artist from the last FM API 

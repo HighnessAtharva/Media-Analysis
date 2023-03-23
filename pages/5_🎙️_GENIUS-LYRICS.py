@@ -1,3 +1,14 @@
+"""
+AUTHOR: @highnessatharva<highnessatharva@gmail.com>
+
+DATE: 2023-03-13
+
+DESCRIPTION: Generates a markdown and a PDF file with the lyrics of an album along with annotations. It takes an album name and an artist name as input.
+
+API KEY: Genius 
+"""
+
+
 import json
 import os
 

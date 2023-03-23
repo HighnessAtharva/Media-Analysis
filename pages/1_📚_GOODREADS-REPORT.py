@@ -1,3 +1,14 @@
+"""
+AUTHOR: @highnessatharva<highnessatharva@gmail.com>
+
+DATE: 2023-02-12
+
+DESCRIPTION: Generate a report of your Goodreads library using Streamlit and Python. Accepts a csv file exported from Goodreads. 
+
+API KEYS: None
+"""
+
+
 import calendar
 import os
 from datetime import datetime
