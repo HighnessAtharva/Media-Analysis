@@ -1,0 +1,13 @@
+[tool.ruff]
+extend-select = [
+    "C9",
+    "PLR091",
+]
+ignore = [
+    "F401",
+    "F841",
+]
+line-length = 731
+
+[tool.ruff.pylint]
+max-statements = 80
