@@ -83,7 +83,7 @@ if rss_to_fetch and submit:
                 entry
                 for entry in d.entries
                 if int(entry.letterboxd_watcheddate[5:7].lstrip("0"))
-                == datetime.now().month - 2
+                == datetime.now().month
             ]
 
             st.write(f"Found {len(d.entries)} entries for the current month.")

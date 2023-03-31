@@ -2,3 +2,4 @@ env/
 .env
 Carbon-Emission-Tracker/
 csvs/
+.vscode/settings.json
