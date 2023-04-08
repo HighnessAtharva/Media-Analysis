@@ -28,11 +28,12 @@ Currently, the following platforms are supported:
 To use this application, follow these steps:
 
 1. Clone this repository to your local machine
-2. Install the required dependencies using `pip install -r requirements.txt`
-3. Run the application using `streamlit run ⭐MEDIA_ANALYSIS.py`
-4. Select a platform from the sidebar
-5. Upload your CSV file or download the example CSVs.
-6. Explore your data and gain insights!
+2. cd into it and `python -m venv env` and `env\Scripts\activate`
+3. Install the required dependencies using `pip install -r requirements.txt`
+4. Run the application using `streamlit run ⭐MEDIA_ANALYSIS.py`
+5. Select a platform from the sidebar
+6. Upload your CSV file or download the example CSVs. To test, use the CSVs in `pages/sample-csv`
+7. Explore your data and gain insights!
 
 ## Contributing
 
