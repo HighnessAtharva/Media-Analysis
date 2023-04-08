@@ -22,6 +22,8 @@ import plotly.express as px
 import requests
 import streamlit as st
 
+import random
+
 # #######################
 # # DATA CLEANUP START #
 # #######################
@@ -59,7 +61,7 @@ def get_omdb_data(title, release_year, user_api_key):
     }
 
 
-def get_extend_dataframe_from_api(movie_df: pd.DataFrame, user_api_key):
+def get_extend_dataframe_from_api(movie_df: pd.DataFrame, user_api_key, CACHE_ID: int):
     skipped_movies = []
 
     col1, col2 = st.columns(2)
@@ -101,10 +103,10 @@ def get_extend_dataframe_from_api(movie_df: pd.DataFrame, user_api_key):
     st.success(
         f"Processed {len(movie_df)-len(skipped_movies)}. Writing to CSV file. Saving Checkpoint!"
     )
-    movie_df.to_csv("csvs/letterboxd/CHECKPOINT1.csv", index=False, encoding="utf-8")
+    movie_df.to_csv(f"csvs/letterboxd/CHECKPOINT1-{CACHE_ID}.csv", index=False, encoding="utf-8")
 
 
-def cleanup_dataframe(movie_df: pd.DataFrame):
+def cleanup_dataframe(movie_df: pd.DataFrame, CACHE_ID: int):
     # rename columns
     movie_df = movie_df.rename(
         columns={
@@ -162,7 +164,7 @@ def cleanup_dataframe(movie_df: pd.DataFrame):
             os.mkdir("csvs/letterboxd")
 
     # SAVE CHECKPOINT
-    movie_df.to_csv("csvs/letterboxd/CHECKPOINT2.csv", index=False, encoding="utf-8")
+    movie_df.to_csv(f"csvs/letterboxd/CHECKPOINT2-{CACHE_ID}.csv", index=False, encoding="utf-8")
 
 
 # #######################
@@ -760,6 +762,12 @@ user_api_key = st.text_input(
 )
 
 
+CACHE_ID = st.text_input(
+    "Enter your cache ID here",
+    placeholder="Cache ID",
+    help="This is the ID you used to cache your data. If you don't have one, leave this blank.",
+)
+
 # TODO: ADD A INPUT BOX FOR USERS TO ENTER THEIR OMBD KEY HERE AND MAKE ONE REQUEST TO CHECK ITS AUTHENTICITY. PROGRESS ONLY IF KEY IS VALID. MENTION THAT WE DO NOT STORE THE KEY IN ANY WAY. REQUEST LIMIT PER DAY IS 1000. PASS THAT KEY TI get_extend_dataframe_from_api function instead of using your own key.
 
 if diary_file is not None:
@@ -818,6 +826,23 @@ else:
 
 
 if KEY_VERIFICATION_PASSED and diary_file is not None and ratings_file is not None:
+    if CACHE_ID:
+        if CACHE_ID and len(CACHE_ID) == 10 and CACHE_ID.isnumeric():
+            CACHE_ID = int(CACHE_ID)
+            st.success("Cache ID verified!")
+
+        elif len(CACHE_ID) != 10 or not CACHE_ID.isnumeric():
+            st.error("Please enter a valid cache ID to continue.")
+
+    else:
+        # generate a 10 digit random number
+        CACHE_ID = random.randint(1000000000, 9999999999)
+
+    #TODO: UNCOMMENT THIS TO DEBUG CACHE_ID
+    # st.write(CACHE_ID)
+    # st.stop()
+    
+    
     # MERGE DATAFRAMES
     movie_df = ratings_df
     # add column to movie_df for Watched Date
@@ -833,16 +858,20 @@ if KEY_VERIFICATION_PASSED and diary_file is not None and ratings_file is not No
     # drop the Date column from movie_df
     movie_df = movie_df.drop(columns=["Date"])
 
+
+
     # # check if csvs/Letterboxd folder exists and file CHECKPOINT1.csv exists, if not then run cleanup_dataframe
-    if not os.path.exists("csvs/letterboxd/CHECKPOINT1.csv"):
-        get_extend_dataframe_from_api(movie_df, user_api_key)
+    if not os.path.exists(f"csvs/letterboxd/CHECKPOINT1-{CACHE_ID}.csv"):
+        get_extend_dataframe_from_api(movie_df, user_api_key, CACHE_ID)
 
-    if not os.path.exists("csvs/letterboxd/CHECKPOINT2.csv"):
-        cleanup_dataframe(movie_df)
+    if not os.path.exists(f"csvs/letterboxd/CHECKPOINT2-{CACHE_ID}.csv"):
+        cleanup_dataframe(movie_df, CACHE_ID)
 
-    movie_df = pd.read_csv(
-        "csvs/letterboxd/CHECKPOINT2.csv", encoding="utf-8", header=0
-    )
+
+
+    movie_df = pd.read_csv(f"csvs/letterboxd/CHECKPOINT2-{CACHE_ID}.csv", encoding="utf-8", header=0)
+
+    st.info(f"Your CACHE ID is {CACHE_ID}. Please save this ID for future use to avoid re-running the API calls.")
 
     # st.header("Data Preview")
     # st.dataframe(movie_df)

@@ -77,7 +77,6 @@ def get_book_cover(bookISBN):
 
 
 @add_seperator
-@st.cache_data
 def general_stats(books_df: pd.DataFrame):
     st.markdown("---")
     col1, col2, col3 = st.columns(3)
@@ -94,7 +93,6 @@ def general_stats(books_df: pd.DataFrame):
 
 
 @add_seperator
-@st.cache_data
 def total_books_by_year(books_df: pd.DataFrame):
     st.header("Total Books Read by Year 🗓️")
     books_by_year = books_df["Year"].value_counts()
@@ -113,11 +111,11 @@ def total_books_by_year(books_df: pd.DataFrame):
         f"📉 You read the least books in **{books_by_year_df['Year'].min().astype(int)}**! Totalling to {books_by_year_df['Count'].min()} books"
     )
 
-    st.bar_chart(books_by_year)
-
+    st.dataframe(books_by_year_df)
+    ff= px.bar(books_by_year_df, x="Year", y="Count", color="Count")
+    st.plotly_chart(ff, use_container_width=True)
 
 @add_seperator
-@st.cache_data
 def top_N_authors(books_df: pd.DataFrame, num_authors: int, genre: str, year: int):
     # for all genres and all years
     if genre == "All" and year == "All":
@@ -214,7 +212,6 @@ def bottom_N_rated_books(books_df: pd.DataFrame, N: int):
     st.dataframe(books_df.head(N), use_container_width=True)
 
 
-@st.cache_data
 @add_seperator
 def total_pages_per_year(books_df: pd.DataFrame):
     books_df = books_df[books_df["Year"] != ""]  # drop all nans
@@ -227,7 +224,6 @@ def total_pages_per_year(books_df: pd.DataFrame):
     st.line_chart(books_df, y="Number of Pages")
 
 
-@st.cache_data
 @add_seperator
 def average_rating_per_year(books_df: pd.DataFrame):
     books_df = books_df[books_df["Year"] != ""]
@@ -238,7 +234,6 @@ def average_rating_per_year(books_df: pd.DataFrame):
     st.line_chart(books_df, y="Average Rating")
 
 
-# @st.cache_data
 @add_seperator
 def pages_read_per_month(books_df: pd.DataFrame):
     st.markdown("### Pages Read per Month (Yearly Comparison)")
@@ -298,7 +293,6 @@ def pages_read_per_month(books_df: pd.DataFrame):
     # st.write(grouped)
 
 
-@st.cache_data
 @add_seperator
 def general_stats_2(books_df: pd.DataFrame):
     col1, col2, col3, col4 = st.columns(4, gap="large")
@@ -446,7 +440,7 @@ def top_bindings(books_df: pd.DataFrame):
     )
     st.plotly_chart(fig)
 
-
+#TODO: DEBUG
 def rating_distribution(books_df: pd.DataFrame):
     st.header("Rating Distribution")
     rating_count = books_df["My Rating"].value_counts().reset_index()
@@ -550,7 +544,6 @@ def publication_year_distribution(books_df: pd.DataFrame):
     st.plotly_chart(fig, use_container_width=True)
 
 
-@st.cache_data
 def distribution_of_book_length(books_df: pd.DataFrame):
     st.header("Book Length Distribution")
     st.info("Click on the legend to hide/show book length ranges")
