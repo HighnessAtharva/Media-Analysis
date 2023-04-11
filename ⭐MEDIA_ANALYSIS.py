@@ -36,3 +36,4 @@ Our code is available on Github for anyone to explore and use. Feel free to chec
 Whether you're a data enthusiast or just curious about your entertainment habits, our app makes it easy for you to gain insights into your favorite platforms. So, what are you waiting for? Upload your CSV file and start analyzing your data today! 
     """
 )
+# hello there
