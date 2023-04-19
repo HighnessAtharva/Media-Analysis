@@ -11,6 +11,7 @@ API KEY: OMDB
 
 import calendar
 import os
+import random
 import urllib
 from datetime import datetime
 from functools import wraps
@@ -21,8 +22,6 @@ import pandas as pd
 import plotly.express as px
 import requests
 import streamlit as st
-
-import random
 
 # #######################
 # # DATA CLEANUP START #

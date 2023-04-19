@@ -465,7 +465,7 @@ def rating_distribution(books_df: pd.DataFrame):
         .encode(
             y=alt.Y("Rating:N", axis=alt.Axis(title="Rating")),
             x=alt.X("Count:Q", axis=alt.Axis(title="Count")),
-            color=alt.Color("Rating:N", scale=color_scale),
+            
             tooltip=[alt.Tooltip("Count:Q")],
         )
         .properties(width=500, height=380)

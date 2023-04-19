@@ -180,6 +180,13 @@ st.markdown("---")
 author = st.text_input(
     "Author", placeholder="Steven Erikson", key="author", help="Enter the author's name"
 )
+
+if author:
+    author = author.lower()
+    max_pages = get_max_pages(author)
+    st.info(f"Total pages available for {author.capitalize()}: {max_pages}")
+
+
 limit = st.number_input(
     "Number of Pages",
     min_value=1,
@@ -188,8 +195,6 @@ limit = st.number_input(
     key="limit",
     help="Enter the number of pages to scrape",
 )
-
-author = author.lower()
 
 check_valid_btn = st.button(
     "Collect Quotes", key="check_author", help="Click to scrape quotes", type="primary"
@@ -230,6 +235,15 @@ if check_valid_btn:
                 if row[0] == "":
                     rows.remove(row)
 
+            # TODO: Add checkboxes for the following options before the collect quotes button and if checked, run the following code: 
+
+            # TODO: Run Sentiment Analysis on the quotes
+
+            # TODO: Before allowing download, sort the quotes by likes and group them by book alphabetically
+
+            # TODO: Add 2-3 graphs to show the data
+
+
             # save the new csv
             with open(
                 f"csvs/goodreads/quote-scraper/{author}_{current_timestamp}.csv",
@@ -259,3 +273,5 @@ if check_valid_btn:
 
     else:
         st.error("Author is not valid")
+
+
