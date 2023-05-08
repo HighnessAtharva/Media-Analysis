@@ -922,7 +922,7 @@ if KEY_VERIFICATION_PASSED and diary_file is not None and ratings_file is not No
     st.info("🔖 Note: The Box Office figures are for US and Canada only, not worldwide.")
 
     st.markdown("---")
-    st.header("Directory Rankings by Your Rating")
+    st.header("Director Rankings by Your Rating")
 
     # get a list of all directors where the number of movies they have directed is greater than 2
     st.info("🔖 Note: Only directors with more than 2 movies are shown.")

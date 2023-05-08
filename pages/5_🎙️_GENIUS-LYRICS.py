@@ -89,7 +89,9 @@ def JSON_to_MD(album, artist):
 def MD_to_PDF(album, artist):
     os.chdir("csvs/genius")
     os.system(f'mdpdf -o "{album} By {artist}.pdf" "{album} By {artist}.md"')
-    os.remove("mdpdf.log")
+    # if the file exists:
+    if os.path.isfile("mdpdf.log"):
+        os.remove("mdpdf.log")
     os.chdir("../..")
 
 
