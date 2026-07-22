@@ -56,3 +56,17 @@ Fork the repo, branch off `main`, commit with clear messages, and open a pull re
 ## License
 
 MIT.
+
+<!-- social-footer -->
+---
+
+<div align="center">
+
+**Atharva Shah** — Python & AI Engineer · Developer Advocate · Technical Writer
+
+[![Website](https://img.shields.io/badge/Website-000000?style=for-the-badge&logo=About.me&logoColor=white)](https://atharvashah.com)
+[![Blog](https://img.shields.io/badge/Blog-FF6719?style=for-the-badge&logo=substack&logoColor=white)](https://blog.atharvashah.com)
+[![Twitter](https://img.shields.io/badge/Twitter-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/cultist_dev)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/atharva-shah-tech/)
+
+</div>
